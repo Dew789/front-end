@@ -1,0 +1,13 @@
+div#planA {
+    background-color: red;
+    width: 960px;
+    margin: auto;
+}
+
+div#planB {
+    background-color: red;
+    width: 960px;
+    position: absolute;
+    left: 50%;
+    margin-left: -480px;
+}
