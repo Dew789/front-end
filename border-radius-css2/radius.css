@@ -1,0 +1,52 @@
+#mid {
+    height:100%; 
+    background-color: white; 
+    border-left: 1px solid black; 
+    border-right: 1px solid black;}
+
+.rtop{
+    display: block; 
+    background-color: white;
+}
+
+.rtop div{
+    display: block;
+    height: 1px; 
+    overflow: hidden;
+}
+
+.rtop .r1{
+    margin: 0 3px; 
+    background-color: black;
+}
+
+.rtop .r2{
+    margin: 0 2px; 
+    border-left: 1px solid black; 
+    border-right: 1px solid black;
+}
+
+.rtop .r3{
+    margin: 0 1px; 
+    border-left: 1px solid black; 
+    border-right: 1px solid black;
+}
+
+.rtop .r4{
+    margin: 0 1px; 
+    border-left: 1px solid black; 
+    border-right: 1px solid black; 
+    height: 1px;
+}
+
+#mid p{
+    margin: 0; 
+    font-size: 12px; 
+    line-height: 24px; 
+    background-color: white; 
+    color: black; 
+    overflow: hidden; 
+    text-indent: 2em; 
+    white-space: pre-wrap;
+    padding:0 10px;
+}
