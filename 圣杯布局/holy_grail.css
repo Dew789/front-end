@@ -1,4 +1,4 @@
-/*圣杯布局*/
+﻿/*圣杯布局*/
 #bd .main {
     float: left;       
     width: 100%;
@@ -24,10 +24,6 @@
     right: -230px;
     background-color: green;
     min-height: 100px;
-}
-
-.temp {
-    clear: both;
 }
 
 #bd {        
