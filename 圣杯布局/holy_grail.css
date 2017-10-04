@@ -1,0 +1,35 @@
+/*圣杯布局*/
+#bd .main {
+    float: left;       
+    width: 100%;
+    background-color: red;
+    min-height: 100px;
+}  
+
+#bd .sub {        
+    float: left;        
+    width: 190px;        
+    margin-left: -100%;
+    position: relative;
+    left: -190px;
+    background-color: blue;
+    min-height: 100px; 
+}  
+
+#bd .extra {        
+    float: left;        
+    width: 230px;        
+    margin-left: -230px;        
+    position: relative;        
+    right: -230px;
+    background-color: green;
+    min-height: 100px;
+}
+
+.temp {
+    clear: both;
+}
+
+#bd {        
+    padding: 0 230px 0 190px;
+}

@@ -1,0 +1,33 @@
+/*双飞翼布局*/
+.grid {
+    width: 100%;
+}
+
+.grid .main {
+    width: 100%;
+    float: left;
+    min-height:100px;
+}
+
+.grid .sub {
+    width: 300px;
+    float: left;
+    margin-left: -100%;
+    background-color: green;
+    min-height:100px;
+}
+
+.grid .extra {
+    width: 300px;
+    float: left;
+    margin-left: -300px; 
+    background-color: blue;
+    min-height:100px;
+}
+
+.grid .main .main-wrap {
+    margin-left:310px;  /*与col-sub产生10像素距离*/
+    margin-right:310px; /*与col-extra产生10像素距离*/
+    min-height:100px;
+    background-color: red;
+}
