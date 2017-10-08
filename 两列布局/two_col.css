@@ -1,0 +1,32 @@
+﻿nav {
+  float: left;
+  width: 200px;
+  background-color: red;
+  min-height: 50;
+}
+
+section {
+  margin-left: 200px;
+  background-color: blue;
+  min-height: 50;
+}
+
+/*第二种方法 */
+div {
+    position: relative;
+    overflow: auto;
+}
+
+nav {
+    position: absolute;
+    left: 0px;
+    width: 200px;
+    background-color: red;
+    min-height: 50;
+}
+
+section {
+  margin-left: 200px;
+  background-color: blue;
+  min-height: 50;
+}s
