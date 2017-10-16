@@ -1,0 +1,116 @@
+1.doctype是什么，它是干啥用的
+    DOCTYPE标签是一种标准通用标记语言的文档类型声明，它的目的是要告诉标准通用标记语言解析器，它应该使用什么样的文档类型定义（DTD）来解析文档。
+
+2.ul、ol、dl都适合用在什么地方
+    ul:无序列表, 例如导航
+    ol:有许列表，例如榜单
+    dl:自定义列表，类似问答
+
+3.理解HTML语义化的
+    为了使机器通过爬虫、搜索引擎等更好的理解html
+
+4.CSS选择器都有哪些
+    标签选择器：标签名称 {css样式代码;}
+    类选择器：.类选器名称 {css样式代码;}
+    ID选择器：#ID选择器 {css样式代码;}
+    子选择器： .food > li {border:1px solid red;} （第一代子元素）
+    后代选择器：.first span {color:red;}
+    通用选择器：* {color:red;}
+    伪类选择符：a:hover {color:red;}
+    分组选择器：h1, span{color:red;}
+
+5.position都有什么值，区别是什么
+    relative: 相对原位置进行偏移，并保留原位置
+    fixed: 相对于浏览器窗口进行偏移, 脱离文档流
+    absolute: 相对于第一个positioned元素进行偏移，脱离文档流
+    static：默认值。没有定位，元素出现在正常的流中
+
+6.布局经常使用的技术
+    浮动 float
+    负边距 negative margin
+    相对定位 relative position
+
+7.经典的清除浮动代码中每一行语句都是干什么用的，为什么少了它不行
+    1).添加额外标签
+        <div style="clear:both;"></div>，使用clear清除浮动
+
+    2).使用br标签和其自身的html属性
+        <br clear="all" />
+
+    3).父元素设置 overflow：hidden
+        <div style="overflow:hidden; *zoom:1;">
+            <div style="{float:left;}">main</div>
+            <div style="{float:left;}">side</div>
+        </div>
+
+    4).父元素设置 overflow: auto
+
+    5).父元素也设置浮动
+
+    6).父元素设置 display:table
+
+    7).使用:after 伪元素
+        实现一：
+            .clearfix:after {content:"200B"; display:block; height:0; clear:both; }
+            .clearfix { *zoom:1; }.
+            a. display:block 使生成的元素以块级元素显示,占满剩余空间;
+            b. height:0 避免生成内容破坏原有布局的高度。
+            c. visibility:hidden 使生成的内容不可见，并允许可能被生成内容盖住的内容可以进行点击和交互;
+            d. 通过 content:"."生成内容作为最后一个元素，至于content里面是点还是其他都是可以的，例如oocss里面就有经典的
+                             content:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",有些版本可能content 里面内容为空,一丝冰凉是不推
+                             荐这样做的,firefox直到7.0 content:”" 仍然会产生额外的空隙；
+            5）zoom：1 触发IE hasLayout
+
+        实现二：
+            /* For modern browsers */
+            .cf:before,.cf:after {
+                content:"";
+                display:table;
+                }
+            .cf:after { clear:both; }/* For IE 6/7 (trigger hasLayout) */
+            .cf { zoom:1; }
+
+        实现三：
+            .clearfix:after {content:"200B"; display:block; height:0; clear:both; }
+            .clearfix { *zoom:1; }.
+
+8.什么是BFC， 哪些条件会触发BFC
+    BFC: 创建了BFC的元素就是一个独立的盒子，里面的子元素不会在布局上影响外面的元素，反之亦然，同时BFC任然属于文档中的普通流。
+
+    触发BFC条件：
+        a.float 除了none以外的值 
+        b.overflow 除了visible 以外的值（hidden, auto, scroll ）
+        c.display (table-cell，table-caption，inline-block) 
+        d.position（absolute，fixed） 
+        e.fieldset元素
+
+9.让一个HTML节点居中的各种实现方式
+    1. margin: 0 auto;
+    2. text-align：center；
+    3. position: absolute;
+       left: 50%;
+       margin-left: 1/2 * width;
+
+10.什么是圣杯布局、双飞翼布局
+    中间自适应的三层布, 都通过负边距进行实现, 双飞翼布局通过在中间层添加新的<div>来实现内容显示，圣杯布局通过
+    相对布局使两边与中间层产生位移。
+
+11.负边距都能干什么
+    在static元素中使用负边距：
+        1.当一个static元素在top/left使用负边距时，它把元素向这个特定的方向拉
+        2.但是当你将负边距设置为相对bottom/right时，它并不会把元素向下或右拉，相反，它会把后面的元素往里面拉，从而覆盖自己。
+        3.如果宽度没有设置，左右负边距会把元素向两个方向拉以增加宽度。在这里margin的作用相当于padding
+    在浮动中使用负边距:
+        1.如果对一个浮动的元素使用负边距，它会产生一个空白，其他元素就可以覆盖这一部分。这个技巧可以很好地用户流式布局。比如有一列宽度100%，另一列有固定的宽度，比如说100px
+        2.如果两个元素都使用了左浮动并且设置margin-right:-20px。#mydiv2会把#mydiv1看成宽度缩小20px（所以会覆盖一部分），但是有趣的是#mydiv1并不会有任何变化，而是依然保持原先的宽度。
+        3.如果负边距和宽度一样大的话，它就会被完全覆盖掉。因为外边距，内边距，边框和内容加起来等于元素的宽度。如果负外边距等于元素的宽度的话，那么该元素的宽度就会变成0px。
+
+    把单个列表变成三列
+    重叠来强调
+    简单的两列布局
+    微调元素
+
+
+12.什么是文档流
+    文档流：将窗体自上而下分成一行一行,并在每行中按从左至右的挨次排放元素,即为文档流。每个非浮动块级元素都独有一行, 浮动元素则按规则浮在行的一端. 若当时行容不下, 则另起新行再浮动。内联元素也不会独有一行. 一切元素(包括块级,内联和列表元素)均可生成子行, 用于摆放子元素。有三种状况将使得元素离开文档流而存在,分别是浮动、绝对定位、固定定位.
+    文档流是文档中可显示对象在排列时所占用的位置。比如网页的div标签它默认占用的宽度位置是一整行，p标签默认占用宽度也是一整行，因为div标签和p标签是块状对象。

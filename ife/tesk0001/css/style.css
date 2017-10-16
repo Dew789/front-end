@@ -1,0 +1,109 @@
+* {
+    padding:0;
+    margin:0;
+}
+
+body {
+    background-color: rgb(238, 238, 238);
+    font-family: SimSun;
+    min-width: 980px;
+}
+
+.nav {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    background-color: rgb(82, 42, 92);
+}
+
+.nav-wrap {
+    position: relative;
+    margin: 0 auto;
+    width: 980px;
+    height: 75px;
+}
+
+#logo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 30px;
+    color: white;
+}
+
+#menu {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 5px;
+}
+
+#menu li {
+    display: inline;
+    margin-left: 2em;
+    font-size: 14px;
+    color: white;
+}
+
+@media screen and (min-width:980px) {
+    #github img {
+        position: absolute;
+        right: 10px;
+        bottom: 0;
+    }
+}
+
+@media screen and (max-width:979px) {
+    #github img {
+        display: none;
+    }
+}
+
+.banner {
+    position: relative;
+}
+
+.banner img {
+    width: 100%;
+}
+
+#intro-bg {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    width: 360px;
+    color: white;
+    text-indent: 2em;
+    padding: 10px 10px 30px;
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.3) 0%, 
+                rgba(255,255,255,0.15) 75%, rgba(255,255,255,0) 100%); /* FF3.6+ */ 
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.3)), to(rgba(255,255,255,0)), color-stop(0.75, rgba(255,255,255,0.15))); /* webkit */
+    -ms-filter: alpha(opacity=30 finishopacity=0 style=1 startx=0,starty=0,finishx=0,finishy=200) 
+                progid:DXImageTransform.Microsoft.gradient(startcolorstr=white,endcolorstr=white, 
+                gradientType=1);/* IE8 */
+}
+
+#intro-bg h2 {
+    font-weight: normal;
+    text-align: right;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+#intro-bg p {
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.content {
+    width: 990px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.module {
+    float: left;
+    width: 320px;
+    margin-left: 10px;
+    background-color: white;
+}
