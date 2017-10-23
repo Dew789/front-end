@@ -109,3 +109,94 @@ function isMobilePhone(phone) {
         console.log("It's not mobile munber.")
     }
 }
+
+// 为element增加一个样式名为newClassName的新样式
+function addClass(element, className) {
+    element.classList.add(className);
+}
+
+// 移除element中的样式oldClassName
+function removeClass(element, oldClassName) {
+    element.classList.remove(className);
+}
+
+// 判断siblingNode和element是否为同一个父元素下的同一级的元素，返回bool值
+function isSiblingNode(element, siblingNode) {
+    if (element.parentNode === siblingNode.parentNode) {
+        return true;
+    }
+    return false;
+}
+
+// 获取element相对于浏览器窗口的位置，返回一个对象{x, y}
+function getPosition(element) {
+    var position = element.getBoundingClientRect();
+    return {'x': position.left, 'y': position.top};
+}
+
+
+// 实现一个简单的Query
+function $(selector) {
+    var id  = /^#(\S+)$/.exec(selector);
+    var tag = /^[^#\[\.]\S*/.exec(selector);
+    var class_name = /^\.(\S+)$/.exec(selector);
+    var attr = /^\[([^=]+)\]$/.exec(selector);
+    var attr_value = /^\[(\S+)=(\S+)\]$/.exec(selector);
+    var id_class = /^#(\S+)\s+\.(\S+)/.exec(selector);
+
+    if (id) {
+        return document.getElementById(id[1]);
+    } else if (tag) {
+        return document.getElementsByTagName(tag)[0];
+    } else if (class_name) {
+        var walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT, null, false);
+        while (walker.nextNode()) {
+            if (walker.currentNode.className === class_name[1]) {
+                return walker.currentNode;
+            }
+        }
+    } else if (attr) {
+        var walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT, null, false);
+        while (walker.nextNode()) {
+            if (walker.currentNode.getAttribute(attr[1]) !== null) {
+                return walker.currentNode;
+            }
+        }
+    } else if (attr_value) {
+        var walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT, null, false);
+        while (walker.nextNode()) {
+            if (walker.currentNode.getAttribute(attr_value[1]) === attr_value[2]) {
+                return walker.currentNode;
+            }
+        }
+    } else if (id_class) {
+        var id_tag = document.getElementById(id_class[1]);
+        if (id_tag) {
+            var walker = document.createTreeWalker(id_tag, NodeFilter.SHOW_ELEMENT, null, false);
+            while (walker.nextNode()) {
+                if (walker.currentNode.className === id_class[2]) {
+                    return walker.currentNode;
+                }
+            }
+        }
+    } else {
+        return null;
+    }
+}
+
+// 可以通过id获取DOM对象，通过#标示，例如
+$("#adom"); // 返回id为adom的DOM对象
+
+// 可以通过tagName获取DOM对象，例如
+$("a"); // 返回第一个<a>对象
+
+// 可以通过样式名称获取DOM对象，例如
+$(".classa"); // 返回第一个样式定义包含classa的对象
+
+// 可以通过attribute匹配获取DOM对象，例如
+$("[data-log]"); // 返回第一个包含属性data-log的对象
+
+$("[data-time=2015]"); // 返回第一个包含属性data-time且值为2015的对象
+
+// 可以通过简单的组合提高查询便利性，例如
+$("#adom .classa"); // 返回id为adom的DOM所包含的所有子节点中，第一个样式定义包含classa的对象
