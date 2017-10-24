@@ -362,13 +362,17 @@ a.current-page {
     font-weight: bold;
 }
 
-#sb_form_q:focus{
+#sb_form_q:focus {
     outline: none;
     border: 1px solid black;
     color: black;
 }
 
-#sb_form_q:focus + #sb_form_go{
+#sb_form_go:focus {
+    outline: none;
+}
+
+#sb_form_q:focus + #sb_form_go {
     border: 1px solid black;
     border-left: none;
     background-color: #999999;
@@ -455,4 +459,93 @@ a.current-page {
 .tagcloud-widget p {
     color: #773c88;
     line-height: 2em;
+}
+
+
+/*gallery*/
+.gallery-wrap {
+    width: 980px;
+    margin: 30px auto;
+    margin-top: 50px;
+    overflow: hidden;
+}
+
+.gallery-wrap .sidebar {
+    margin-top: 55px;
+}
+
+#gallery {
+    width: 710px;
+    float: left;
+}
+
+#gallery .tag {
+    height: 54px;
+    list-style-type: none;
+}
+
+#gallery .tag li {
+    float: left;
+    border-left: solid 1px #dddddd;
+    border-bottom: solid 1px #dddddd;
+    padding: 15px 20px 20px;
+    height: 15px;
+    font-size: 12px;
+    background-color: white;
+}
+
+.tag #all {
+    border-top: 4px solid #dfc6e6;
+}
+
+.tag #js {
+    border-top: 4px solid #dfc6e6;
+}
+
+.tag #ui{
+    border-top: 4px solid rgb(210, 166, 255);
+}
+
+.tag #frame {
+    border-top: 4px solid rgb(255, 169, 140);
+}
+
+.tag #app {
+    border-top: 4px solid rgb(255, 255, 136);
+}
+
+.tag #all:hover {
+    border-top: 4px solid rgb(82, 42, 92);
+    border-bottom: none;
+}
+
+.tag #js:hover {
+    border-top: 4px solid rgb(82, 42, 92);
+    border-bottom: none;
+}
+
+.tag #ui:hover{
+    border-top: 4px solid rgb(89, 0, 187);  
+    border-bottom: none;
+}
+
+.tag #frame:hover {
+    border-top: 4px solid rgb(140, 35, 0);
+    border-bottom: none;
+}
+
+.tag #app:hover {
+    border-top: 4px solid rgb(217, 163, 0);
+    border-bottom: none;
+}
+
+.gallery-fall {
+    clear: both;
+    background-color: white;
+    height: 100px;
+    overflow: hidden;
+}
+
+.gallery-artical {
+    margin: 20px;
 }
