@@ -3,6 +3,10 @@
     margin:0;
 }
 
+a {
+    text-decoration: none;
+}
+
 body {
     background-color: rgb(238, 238, 238);
     font-family: SimSun;
@@ -212,7 +216,6 @@ body {
 .footer .links a {
     font-size: 12px;
     color: white;
-    text-decoration: none;
 }
 
 .footer .links a:hover {
@@ -311,7 +314,6 @@ body {
     background-color: white;
     display: inline-block;
     padding: 15px;
-    text-decoration: none;
     color: black;
     font-style: bold;
     line-height: 0.1;
@@ -362,9 +364,10 @@ a.current-page {
     box-sizing: content-box;
 }
 
-/* calender */
+/* catalog */
 .catalog {
     list-style-type: none;
+    margin-bottom: 10px; 
 }
 
 .catalog a {
@@ -373,7 +376,6 @@ a.current-page {
     border-left: 4px solid #dfc6e6;
     border-bottom: 1px solid #dddddd;
     background-color: white;
-    text-decoration: none;
     text-indent: 2em;
     font-size: 12px;
     line-height: 48px;
@@ -384,3 +386,63 @@ a.current-page {
     border-left: 4px solid #522a5c;
 }
 
+/*calender*/
+.calender-widget {
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 20px; 
+}
+
+#calender {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+    color: #999999;
+}
+
+#calender a {
+    color: #773c88;
+    font-weight: bold;
+}
+
+#calender .today {
+    color: white;
+    display: block;
+    background-color: #773c88;
+}
+
+#calender caption {
+    text-align: justify;
+    height: 1.5em;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+#calender caption:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+}
+
+#calender td,th {
+    border-bottom: 1px solid #eeeeee;
+    height: 2em;
+    font-weight: normal;
+}
+
+/*tag-cloud*/
+.tagcloud-widget {
+    width: 220px;
+    background-color: white;
+    padding: 20px;
+}
+
+.tagcloud-header {
+    color: #666666;
+    margin-bottom: 14px;
+}
+
+.tagcloud-widget p {
+    color: #773c88;
+    line-height: 2em;
+}
