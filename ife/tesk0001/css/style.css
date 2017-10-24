@@ -340,28 +340,38 @@ a.current-page {
 #sb_form_q {
     float: left;
     width: 169px;
-    height: 38px;
+    height: 40px;
     border: 1px solid #dddddd;
     border-right: none;
     text-indent: 3em;
     background-image: url(../img/search.jpg);
     background-repeat: no-repeat;
-    color: #999999;
     display:block;
+    color: #dddddd;
     line-height:1em;
-    box-sizing: content-box;
 }
 
 #sb_form_go {
     float: left;
     width: 48px;
-    height: 38px;
+    height: 40px;
     border: 1px solid #dddddd;
     background-color: #dddddd;
     color: white;
     font-size: 20px;
     font-weight: bold;
-    box-sizing: content-box;
+}
+
+#sb_form_q:focus{
+    outline: none;
+    border: 1px solid black;
+    color: black;
+}
+
+#sb_form_q:focus + #sb_form_go{
+    border: 1px solid black;
+    border-left: none;
+    background-color: #999999;
 }
 
 /* catalog */
