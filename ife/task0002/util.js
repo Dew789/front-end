@@ -139,43 +139,45 @@ function getPosition(element) {
 function $(selector) {
     var id  = /^#(\S+)$/.exec(selector);
     var tag = /^[^#\[\.]\S*/.exec(selector);
-    var class_name = /^\.(\S+)$/.exec(selector);
+    var cls = /^\.(\S+)$/.exec(selector);
     var attr = /^\[([^=]+)\]$/.exec(selector);
     var attr_value = /^\[(\S+)=(\S+)\]$/.exec(selector);
-    var id_class = /^#(\S+)\s+\.(\S+)/.exec(selector);
+    var id_cls = /^#(\S+)\s+\.(\S+)/.exec(selector);
 
     if (id) {
         return document.getElementById(id[1]);
     } else if (tag) {
         return document.getElementsByTagName(tag)[0];
-    } else if (class_name) {
-        var walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT, null, false);
-        while (walker.nextNode()) {
-            if (walker.currentNode.className === class_name[1]) {
-                return walker.currentNode;
+    } else if (cls) {
+        var elements = document.getElementsByTagName("*");
+        for (var ele of elements) {
+            var ele_cls = ele.className.split(" ");
+            if (ele_cls.indexOf(cls[1]) !== -1) {
+                return ele;
             }
         }
     } else if (attr) {
-        var walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT, null, false);
-        while (walker.nextNode()) {
-            if (walker.currentNode.getAttribute(attr[1]) !== null) {
-                return walker.currentNode;
+        var elements = document.getElementsByTagName("*");
+        for (var ele of elements) {
+            if (ele.getAttribute(attr[1])) {
+                return ele;
             }
         }
     } else if (attr_value) {
-        var walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT, null, false);
-        while (walker.nextNode()) {
-            if (walker.currentNode.getAttribute(attr_value[1]) === attr_value[2]) {
-                return walker.currentNode;
+        var elements = document.getElementsByTagName("*");
+        for (var ele of elements) {
+            if (ele.getAttribute(attr_value[1]) === attr_value[2]) {
+                return ele;
             }
         }
-    } else if (id_class) {
-        var id_tag = document.getElementById(id_class[1]);
+    } else if (id_cls) {
+        var id_tag = document.getElementById(id_cls[1]);
         if (id_tag) {
-            var walker = document.createTreeWalker(id_tag, NodeFilter.SHOW_ELEMENT, null, false);
-            while (walker.nextNode()) {
-                if (walker.currentNode.className === id_class[2]) {
-                    return walker.currentNode;
+            var elements = id_tag.getElementsByTagName("*");
+            for (var ele of elements) {
+                var ele_cls = ele.className.split(" ");
+                if (ele_cls.indexOf(id_cls[2]) !== -1) {
+                    return ele;
                 }
             }
         }
