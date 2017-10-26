@@ -186,3 +186,47 @@ function $(selector) {
     }
 }
 
+
+$.on = function(selector, event, listener) {
+    element = $(selector);
+    if (element.addEventListener) {
+        element.addEventListener(event, listener, false);
+    } else if (element.attachEvent) {
+        element.attachEvent('on'+event, listener);
+    } else {
+        element['on'+event] = listener;
+    }
+}
+
+$.click = function(selector, listener) {
+              element = $(selector);
+              if (element.addEventListener) {
+                  element.addEventListener('click', listener, false);
+              } else if (element.attachEvent) {
+                  element.attachEvent('onclick', listener);
+              } else {    
+                  element['onclick'] = listener;
+              }
+          }
+
+$.un = function(selector, event, listener) {
+           element = $(selector);
+           if (element.removeEventListener) {
+               element.removeEventListener(event, listener, false);
+           } else if (element.detachEvent) {
+               element.detachEvent('on'+event, listener);
+           } else {
+               element['on'+event] = null;
+           }
+       }
+
+$.delegate = function(selector, tag, eventName, listener) {
+                element = $(selector);
+                $.on(element, eventName, function(){
+                    var e = event || window.event;
+                    var target = e.target ||e.srcElement;
+                    if (target.tagName == tag) {
+                        listener(e);
+                    }
+                })
+             }
