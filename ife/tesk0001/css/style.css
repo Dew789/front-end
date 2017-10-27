@@ -482,12 +482,13 @@ a.current-page {
 #gallery .tag {
     height: 54px;
     list-style-type: none;
+    border-bottom: solid 1px #fff;
 }
 
 #gallery .tag li {
     float: left;
-    border-left: solid 1px #dddddd;
-    border-bottom: solid 1px #dddddd;
+    border-left: solid 1px #ddd;
+    border-bottom: solid 1px #ddd;
     padding: 15px 20px 20px;
     height: 15px;
     font-size: 12px;
@@ -540,12 +541,107 @@ a.current-page {
 }
 
 .gallery-fall {
-    clear: both;
-    background-color: white;
-    height: 100px;
+    -webkit-column-width: 160px;
+    -moz-column-width: 160px; 
+    -webkit-column-gap: 10px;
+    -moz-column-gap: 10px;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.gallery-fall div {
+    width: 160px;
+    margin-bottom: 10px 0;
     overflow: hidden;
 }
 
-.gallery-artical {
-    margin: 20px;
+.gallery-more {
+    background-color: #fff;
+    color: #666;
+    margin: 15px 0;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    background: #fff url("../img/down.jpg") 285px 10px no-repeat;
+    cursor: pointer;
+}
+
+#billboard {
+    background-color: #fff;
+    overflow: hidden;
+}
+
+#billboard p {
+    text-align: left;
+    font-size: 14px;
+    margin: 10px 0 20px 10px;
+    color: #666666;
+}
+
+#billboard li>div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+#billboard ul {
+    list-style-type: none;
+}
+
+#billboard li {
+    margin-bottom: 10px;
+}
+
+#billboard .ranking-index {
+    width:16px;
+    height:16px;
+    background-color:#773c88;
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    line-height: 16px
+}
+
+#billboard .ranking-bar {
+    border: #773c88 solid 1px;
+    height: 20px;
+    width: 100px;
+}
+
+#billboard li[rank="1"] .bar{
+    width: 100px;
+    height: 20px;
+    background-color: #773c88;
+}
+
+#billboard li[rank="2"] .bar{
+    width: 80px;
+    height: 20px;
+    background-color: #773c88;
+}
+
+#billboard li[rank="3"] .bar{
+    width: 60px;
+    height: 20px;
+    background-color: #773c88;
+}
+
+#billboard li[rank="4"] .bar{
+    width: 40px;
+    height: 20px;
+    background-color: #773c88;
+}
+
+#billboard li[rank="5"] .bar{
+    width: 30px;
+    height: 20px;
+    background-color: #773c88;
+}
+
+#billboard .ranking-name {
+    line-height: 20px;
+    font-size: 12px;
+    width: 50px;
 }

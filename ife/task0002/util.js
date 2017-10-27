@@ -226,7 +226,7 @@ $.delegate = function(selector, tag, eventName, listener) {
                     var e = event || window.event;
                     var target = e.target ||e.srcElement;
                     if (target.tagName == tag) {
-                        listener(e);
+                        listener();
                     }
                 })
              }
