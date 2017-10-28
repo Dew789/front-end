@@ -8,7 +8,7 @@ a {
 }
 
 body {
-    background-color: rgb(238, 238, 238);
+    background-color: #eee;
     font-family: SimSun;
     min-width: 980px;
 }
@@ -48,7 +48,10 @@ body {
     display: inline;
     margin-left: 2em;
     font-size: 14px;
-    color: white;
+}
+
+#menu li a {
+    color: #fff;
 }
 
 @media screen and (min-width:980px) {
@@ -567,6 +570,7 @@ a.current-page {
     cursor: pointer;
 }
 
+/*sbillboard*/
 #billboard {
     background-color: #fff;
     overflow: hidden;
@@ -644,4 +648,96 @@ a.current-page {
     line-height: 20px;
     font-size: 12px;
     width: 50px;
+}
+
+/*about*/
+.about {
+    margin: 0 auto;
+    margin-top: 100px;
+    width: 980px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.round-big {
+    border-radius: 50%;
+    border: 10px #eee solid;
+    display: inline-block;
+    font-size: 0;
+    margin-top: -50px;
+}
+
+.round-small {
+    border-radius: 50%;
+    border: 3px #eee solid;
+    display: inline-block;
+    font-size: 0;
+}
+
+.detail {
+    overflow: hidden;
+}
+
+.detail.blank .right{
+    height: 300px;
+}
+
+.left {
+    font-size: 20px;
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+    padding: 40px 50px 40px 280px; 
+}
+
+.right {
+    font-size: 14px;
+    border-left: 5px #eee solid;
+    width: 50%;
+    float: right;   
+    margin-left: -5px;
+    box-sizing: border-box;
+    padding: 40px 30px;
+}
+
+.left h2 {
+    width: 150px;
+}
+
+.right p, 
+.right ul {
+    list-style-type: none;
+    width: 400px;
+    line-height: 1.6;
+    text-align: left;
+    text-indent: 2em;
+}
+
+.right ul li {
+    margin-bottom: 5px;
+}
+
+.time-line {
+    margin-bottom: 30px;
+}
+
+.time-line.last {
+    margin-bottom: 0;
+}
+
+.time-line p {
+    display: inline-block;
+    text-indent: 0;
+}
+
+.time-line .year {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    border: 5px #eee solid;
+    border-radius: 10px;
+    width: 50px;
+    text-align: center;
+    margin-left: -80px;
+    background-color: #fff;
 }
