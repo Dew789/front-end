@@ -78,9 +78,12 @@ function simpleTrim(str) {
 // 尝试使用一行简洁的正则表达式完成该题目
 function trim(str) {
     // your implement
-    var re = /\s+(\S+)\s+/;
-    var trim_str = re.exec(str)[1];
-    return trim_str;
+    var re = /\s*(.+\S)\s*/;
+    var result = re.exec(str);
+    if (result) {
+        return result[1];
+    }
+    return "";
 }
 
 // 实现一个遍历数组的方法，针对数组中每一个元素执行fn函数，并将数组索引和元素作为参数传递
