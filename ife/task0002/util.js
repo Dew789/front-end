@@ -8,19 +8,26 @@ function isFunction(fn) {
     return typeof fn == 'function';
 }
 
-// 使用递归来实现一个深度克隆，可以复制一个目标对象，返回一个完整拷贝
-// 被复制的对象类型会被限制为数字、字符串、布尔、日期、数组、srcect对象。不会包含函数、正则对象等
-function clonesrcect(src){ 
-    var obj = src.constructor === Array ? [] : {}; 
-    for(var i in src){ 
-        if(src.hasOwnProperty(i)){ 
-            obj[i] = typeof src[i] === "object" ? clonesrcect(src[i]) : src[i]; 
+//使用递归来实现一个深度克隆，可以复制一个目标对象，返回一个完整拷贝
+//被复制的对象类型会被限制为数字、字符串、布尔、日期、数组、object对象。不会包含函数、正则对象等
+function deepclone(src) {
+    var type = typeof src;
+    if (type == "number" || type == "boolean" || type == "string") {
+        return src
+    } else if (type == "object") {
+        if (src.constructor == Date) {
+            return new Date(src);
         }
-    } 
-    return obj;
-} 
+        var obj = src.constructor == Array? [] : {};
+        for (var index in src) {
+            obj[index] = deepclone(src[index]);
+        }
+        return obj;
+    }
+}
 
-function clonesrcect2(src){ 
+
+function deepclone2(src){ 
     var src = JSON.stringify(src); 
     var obj = JSON.parse(src); 
     return obj;
@@ -35,12 +42,12 @@ function uniqArray_1(arr) {
 }
 
 function uniqArray_2(arr) {
-  const seen = new Map()
-  return arr.filter((a) => !seen.has(a) && seen.set(a, 1))
+  var seen = new Map();
+  return arr.filter((a) => !seen.has(a) && seen.set(a, 1));
 }
 
 function uniqArray_3(arr) {
-  return Array.from(new Set(arr))
+  return Array.from(new Set(arr));
 }
 
 // 实现一个简单的trim函数，用于去除一个字符串，头部和尾部的空白字符
@@ -230,3 +237,112 @@ $.delegate = function(selector, tag, eventName, listener) {
                     }
                 })
              }
+
+// 判断是否为IE浏览器，返回-1或者版本号
+function isIE() {
+    var userAgent = navigator.userAgent;
+    var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; 
+    var isEdge = userAgent.indexOf("Edge") > -1 && !isIE;
+    var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+    if(isIE) {
+        var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+        reIE.test(userAgent);
+        var fIEVersion = parseFloat(RegExp["$1"]);
+        if(fIEVersion == 7) {
+            return 7;
+        } else if(fIEVersion == 8) {
+            return 8;
+        } else if(fIEVersion == 9) {
+            return 9;
+        } else if(fIEVersion == 10) {
+            return 10;
+        } else {
+            return 6;//IE版本<=7
+        }   
+    } else if(isEdge) {
+        return 'edge';
+    } else if(isIE11) {
+        return 11; 
+    }else{
+        return -1;
+    }
+}
+
+// 设置cookie
+function setCookie(cookieName, cookieValue, expiredays) {
+    expiredays = expiredays || 0;
+    var ex_date = new Date()
+    ex_date.setDate(ex_date.getDate() + expiredays)
+    document.cookie = cookieName + "=" + escape(cookieValue)
+                      + "; expires=" + ex_date.toGMTString()
+}
+
+// 查找cookie
+function getCookie(cookieName) {
+    var re = new RegExp(cookieName + '(.+?);');
+    value = re.exec(document.cookie)
+    if (value){
+        return value[1];
+    }
+    return "";
+}
+
+// 自定义ajax
+function ajax(url, options) {
+    var xhr = new XMLHttpRequest();
+    if (options.type == "get") {
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState==4 && xhr.status==200) {
+                onsuccess(xhr.responseText, xhr)
+            } else if (xhr.status==404) {
+                onfail();
+            }
+        }
+        xhr.open("GET", url, true);
+        xhr.send();
+    }
+
+}
+
+
+// 自定义ajax
+function ajax(url, options) {
+    var xhr = new XMLHttpRequest(), 
+        sent = "";
+    if (options.data) {
+        var data = options.data;
+        if (typeof data == "object") {
+            for (var i in data) {
+                sent = sent + i + data[i] + "&";
+            }
+            sent = sent.substring(0, sent.length-1);
+        } else if (typeof data == "string") {
+            sent = data;
+        }
+    }
+    if (options.type == "get") {
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status==200 && options.onsuccess) {
+                    options.onsuccess(xhr.responseText, xhr);
+                } else if (options.onfail) {
+                    options.onfail(xhr.responseText, xhr);
+                }
+            }
+        }
+        xhr.open("GET", url+sent, true);
+        xhr.send();
+    } else if (options.type == "post") {
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status==200 && options.onsuccess) {
+                    options.onsuccess(xhr.responseText, xhr);
+                } else if (options.onfail) {
+                    options.onfail(xhr.responseText, xhr);
+                }
+            }
+        }
+        xhr.open("POST", url+sent, true);
+        xhr.send(sent);
+    }
+}

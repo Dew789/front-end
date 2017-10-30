@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% load staticfiles %}
+    <title>Post polls</title>
+    <script type="text/javascript" src="{% static 'jquery-3.2.1.js' %}"></script>
+    {% block title %}{% endblock %}
+</head>
+<body>
+	{% if messages %}
+    	<ul class="messages">
+    	 	{% for message in messages %}
+    	    	<li class="{{ message.tags }}">
+    	   			{{ message|safe }}
+    	       		<a href="#" class="close"> </a>
+    	    	</li>
+    	 	{% endfor %}
+    	</ul>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
