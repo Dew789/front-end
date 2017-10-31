@@ -3,10 +3,6 @@ window.onload = function(){
         time_input = document.getElementById('time'),
         count_down = document.getElementById('count-down');
 
-    time_input.onfocus = function() {
-        time_input.value = "";
-    }
-
     function get_time(future) {
         var now = Date.now();
         var count = parseInt((future - now) / 1000);

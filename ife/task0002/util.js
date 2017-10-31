@@ -349,3 +349,12 @@ function ajax(url, options) {
         xhr.send(sent);
     }
 }
+
+//获取一个元素的任意 CSS 属性值
+function getStyle(element, attr) {
+    if(element.currentStyle) {
+        return element.currentStyle[attr];
+    } else {
+        return getComputedStyle(element, false)[attr];
+    }
+}
