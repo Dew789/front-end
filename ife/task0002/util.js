@@ -282,7 +282,7 @@ function setCookie(cookieName, cookieValue, expiredays) {
 
 // 查找cookie
 function getCookie(cookieName) {
-    var re = new RegExp(cookieName + '(.+?);');
+    var re = new RegExp(cookieName + '=(.+?)(?:;|$)');
     value = re.exec(document.cookie)
     if (value){
         return value[1];
