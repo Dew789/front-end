@@ -69,7 +69,7 @@ function drag(){
 function fnDown(event){
   event = event || window.event;
   var oDrag=document.getElementById('loginPanel'),
-      // 光标按下时光标和面板之间的距离
+  // 光标按下时光标和面板之间的距离
       disX=event.clientX-oDrag.offsetLeft,
       disY=event.clientY-oDrag.offsetTop;
   // 移动
