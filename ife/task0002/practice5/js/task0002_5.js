@@ -54,6 +54,22 @@ function swapNode(node1, node2) {
     node2.parentNode.replaceChild(node1Copy, node2);
 }
 
+// Insert Placeholder
+function inertHolder(box, t) {
+    var top = box.offsetTop,
+        item = box.getElementsByTagName('li');
+    if (t > top) {
+        var index = Math.ceil((t-top)/50);
+        if (index != lastIndex) {
+            box.insertBefore(placeHolder, item[index]);
+            lastIndex = index;
+        }
+    } else if (t <= top) {
+        box.insertBefore(placeHolder, item[0]);
+        lastIndex = 0;
+    }
+}
+
 function move(target, e, posX, posY) {
     var l = e.clientX - posX,
         t = e.clientY - posY,
@@ -70,25 +86,11 @@ function move(target, e, posX, posY) {
     } else if(t > maxH){
       t = maxH;
     }
-    // Insert Placeholder
-    function inertHolder(box) {
-        var top = box.offsetTop,
-            item = box.getElementsByTagName('li');
-        if (t > top) {
-            var index = Math.ceil((t-top)/50);
-            if (index != lastIndex) {
-                box.insertBefore(placeHolder, item[index]);
-                lastIndex = index;
-            }
-        } else if (t <= top) {
-            box.insertBefore(placeHolder, item[0]);
-            lastIndex = 0;
-        }
-    }
+
     if ((box1Left-90)<l && l<(box1Left-90+box1Width)) {
-        inertHolder(box1);
+        inertHolder(box1, t);
     } else if ((box2Left-90)<l && l<(box2Left-90+box2Width)) {
-        inertHolder(box2);
+        inertHolder(box2, t);
     }
 
     target.style.left = l + 'px';
