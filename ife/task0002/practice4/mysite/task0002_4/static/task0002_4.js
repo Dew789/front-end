@@ -68,7 +68,6 @@ search.oninput = function() {
         onsuccess: show
     }
     function show(response, xhr) {
-        suggest.style.display = "none";
         result = JSON.parse(response);
         if (shown) {
             var list = suggest.getElementsByTagName("li");

@@ -89,7 +89,7 @@ function move(target, e, posX, posY) {
 
     if ((box1Left-90)<l && l<(box1Left-90+box1Width)) {
         inertHolder(box1, t);
-    } else if ((box2Left-90)<l && l<(box2Left-90+box2Width)) {
+    } else if ((box2Left-90)<l && l<(box2Left-120+box2Width)) {
         inertHolder(box2, t);
     }
 

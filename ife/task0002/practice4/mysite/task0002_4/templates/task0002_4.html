@@ -8,8 +8,8 @@
     <body>
         <div id="container">
             <input type="text" id="search">
-            <ul id="suggest">
-            </ul>
+            {% csrf_token %}
+            <ul id="suggest"></ul>
         </div>
         <script src="../static/task0002_4.js"></script>
     </body>

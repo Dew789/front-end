@@ -1,0 +1,67 @@
+Javascript与Python作用域的比较
+1.块级作用域
+    这个两个语言均不存在块级作用域，也就是说在单纯的条件语句或循环中，变量会保存在当前作用域中
+    与Java,C#等语言不同。
+
+    注：python如果 for 循环的序列为空，这些变量是完全不会被赋值的。
+
+2.局部作用域
+    在函数内部的变量只在函数内部生效，函数结束调用消失
+
+3.作用域
+Python
+    关于python作用域的几个概念
+        namespace:从名字到对象的一个映射(a mapping from name to objects), 大部分namespace都是用python字典来实现的，在程序执行期间，可能（其实是肯定）会有多个名空间同时存在。不同namespace的创建销毁时间也不同。此外，两个不同namespace中的两个相同名字的变量之间没有任何联系
+
+        scope: Scope是Python程序的一块文本区域(textual region)，在该文本区域中，对namespace是可以直接访问，而不需要通过属性来访问
+
+        namespace 和 scope的关系
+        在Python中，scope是由namespace按特定的层级结构组合起来的。
+        scope一定是namespace，但namespace不一定是scope.
+
+        作用域规则LEGB Rule
+            Local -> Enclosing -> Global -> Built-in
+            nonlocal：nonlocal关键字用来在函数或其他作用域中修改外层(非全局)变量。
+            global：global关键字用来在函数或其他局部作用域中修改全局变量。
+
+        Assignment Rule
+        赋值语句通常隐式地会创建一个局部(local)变量，即便该变量名已存在于赋值语句发生的上一层作用域中；
+        如果没有 global 关键字声明变量，对一个变量的赋值总是认为该变量存在于最内层(innermost)的作用域中；
+
+        Class 命名空间
+        会生成一个新的命名空间，一旦内部形成了scope,不会在类的命名空间中查找变量，会去类外查找
+        变量
+
+        定义时形成作用域
+        name = "lzl"
+        def f1():
+            print(name)
+         
+        def f2():
+            name = "eric"
+            f1()
+        f2() # lzl
+
+        函数在调用时作用域内查询变量
+        li = [lambda :x for x in range(10)]
+        res = li[0]()
+        print(res) #9
+ 
+    JavaScript
+        JavaScript中的函数运行在它们被定义的作用域里,而不是它们被执行的作用域里。
+        作用域链
+            JavaScript里一切都是对象。函数对象和其它对象一样，拥有可以通过代码访问的属性和一系列仅供JavaScript引擎访问的内部属性。其中一个内部属性是[[Scope]]，由ECMA-262标准第三版定义，该内部属性包含了函数被创建的作用域中对象的集合，这个集合被称为函数的作用域链，它决定了哪些数据能被函数访问。
+
+
+        Javascript的预编译
+            在JS中, 是有预编译的过程的, JS在执行每一段JS代码之前, 都会首先处理var关键字和function定义式(函数定义式和函数表达式).
+            如上文所说, 在调用函数执行之前, 会首先创建一个活动对象, 然后搜寻这个函数中的局部变量定义,和函数定义, 将变量名和函数名都做为这个活动对象的同名属性, 对于局部变量定义,变量的值会在真正执行的时候才计算, 此时只是简单的赋为undefined.
+
+
+
+链接：
+1.http://blog.cipherc.com/2015/04/25/python_namespace_and_scope/
+2.http://python.jobbole.com/86465/
+3.http://www.cnblogs.com/z360519549/p/5172020.html
+4.http://www.laruence.com/2009/05/28/863.html
+5.http://www.cnblogs.com/lhb25/archive/2011/09/06/javascript-scope-chain.html
