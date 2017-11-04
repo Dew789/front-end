@@ -33,7 +33,7 @@ function ajax(url, options) {
             if (xhr.readyState == 4) {
                 if (xhr.status==200) {
                     options.onsuccess && options.onsuccess(xhr.responseText, xhr);
-                } else{
+                } else {
                     options.onfail && options.onfail(xhr.responseText, xhr);
                 }
             }
@@ -45,7 +45,7 @@ function ajax(url, options) {
             if (xhr.readyState == 4) {
                 if (xhr.status==200) {
                     options.onsuccess && options.onsuccess(xhr.responseText, xhr)
-                } else{
+                } else {
                     options.onfail && options.onfail(xhr.responseText, xhr)
                 }
             }

@@ -7,7 +7,7 @@ var container = document.getElementById('container'),
     box2Width = box2.offsetWidth,
     winW = document.documentElement.scrollWidth || document.body.scrollWidth,
     winH = document.documentElement.scrollHeight || document.body.scrollHeight,
-    lastIndex = null,
+    lastIndexId = null,
     isHolder = false;
 
 // Create placeholder
@@ -57,16 +57,19 @@ function swapNode(node1, node2) {
 // Insert Placeholder
 function inertHolder(box, t) {
     var top = box.offsetTop,
+        id = box.id,
         item = box.getElementsByTagName('li');
+        
     if (t > top) {
-        var index = Math.ceil((t-top)/50);
-        if (index != lastIndex) {
+        var index = Math.ceil((t-top)/50),
+            indexId = index + id;
+        if (indexId != lastIndexId) {
             box.insertBefore(placeHolder, item[index]);
-            lastIndex = index;
+            lastIndexId = indexId;
         }
     } else if (t <= top) {
         box.insertBefore(placeHolder, item[0]);
-        lastIndex = 0;
+        lastIndexId = 0 + id;
     }
 }
 
@@ -88,8 +91,10 @@ function move(target, e, posX, posY) {
     }
 
     if ((box1Left-90)<l && l<(box1Left-90+box1Width)) {
+        console.log(1);
         inertHolder(box1, t);
-    } else if ((box2Left-90)<l && l<(box2Left-120+box2Width)) {
+    } else if ((box2Left-90)<l && l<(box2Left-90+box2Width)) {
+        console.log(2);
         inertHolder(box2, t);
     }
 
