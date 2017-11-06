@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>task0003</title>
         <link rel="stylesheet" type="text/css" href="css/task0003.css"/>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome-4.7.0/css/font-awesome.css"/>
     </head>
     <body>
         <div class="nav">
@@ -11,17 +12,37 @@
         </div>
         <div class="container">
             <div class="category">
-                <p class="header">所有任务</p>
+                <p class="header">所有任务(0)</p>
                 <p class="header">分类列表</p>
-                <p class="footer">新建分类</p>
+                <ul id="class-list">
+                    <li>
+                        <i class="fa fa-folder-open" aria-hidden="true"></i><span>默认分类(0)</span>
+                    </li>
+                </ul>
+                <div class="footer">
+                    <i id="add-class" class="fa fa-plus" aria-hidden="true"></i>
+                    <span>新建分类</span>
+                </div>
             </div>
             <div class="handle">
-                <div class="status"> 
+                <ul id="status">
+                    <li class="select">所有</li>
+                    <li>未完成</li>
+                    <li>已完成</li>
+                </ul>
+                <div class="footer">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <span>新增任务</span>
                 </div>
-                <p class="footer">新建分类</p>
             </div>
             <div class="content">
-                <P class="caption"></P>
+                <div class="caption">
+                    <span>任务5</span>
+                    <div id="modify">
+                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </div>
+                </div>
             </div>
         </div>
         <script src="js/jquery-3.2.1.js"></script>

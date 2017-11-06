@@ -73,12 +73,107 @@ body {
     background-color: #f2f2f2;
 }
 
-.status {
-    height: 40px;
-    background-color: #f2f2f2; 
+.caption {
+    position: relative;
+    height: 60px;
+    line-height: 60px;
+    font-size: 18px;
+    text-indent: 1em;
+    background-color: #f2f2f2;
 }
 
-.caption {
-    height: 70px;
+#class-list {
+    list-style-type: none;
+}
+
+#class-list li {
+    position: relative;
+    margin-left: 25px;
+    margin-bottom: 10px;
+}
+
+#class-list span {
+    margin-left: 0.5em;
+}
+
+#delete {
+    position: absolute;
+    right: 10px;
+    top: 3px;
+    cursor: pointer;
+}
+
+#status {
+    height: 40px;
+    background-color: #f2f2f2; 
+    list-style-type: none;
+}
+
+#status li {
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 0.8em;
+    width: 50px;
+    border-radius: 1px;
+    text-align: center;
+    font-size: 14px; 
+    line-height: 1.6;
+}
+
+.select {
+    background-color: #fff;
+}
+
+#modify {
+    position: absolute;
+    top: 0;
+    right: 30px;
+    font-size: 20px;
+}
+
+#add-class {
+    cursor: pointer;
+}
+
+.mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    min-height: 500px;
+    background-color: rgba(0, 0 ,0, .5);
+}
+
+.new-class {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -125px;
+    width: 250px;
+    height: 150px;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    text-align: center;
     background-color: #f2f2f2;
+    z-index: 1;
+}
+
+.new-class p {
+    margin-bottom: 10px;
+}
+
+.new-class input {
+    margin-bottom: 10px;
+}
+
+.new-class .btn {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.hide {
+    display: none !important;
 }
