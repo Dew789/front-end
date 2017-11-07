@@ -14,15 +14,11 @@
             <div class="category">
                 <p class="header">所有任务(0)</p>
                 <p class="header">分类列表</p>
-                <ul id="class-list">
-                    <li>
+                <ul id="level1Class">
+                    <li id="level2Class">
                         <i class="fa fa-folder-open" aria-hidden="true"></i><span>默认分类(0)</span>
                     </li>
                 </ul>
-                <div class="footer">
-                    <i id="add-class" class="fa fa-plus" aria-hidden="true"></i>
-                    <span>新建分类</span>
-                </div>
             </div>
             <div class="handle">
                 <ul id="status">
@@ -30,20 +26,34 @@
                     <li>未完成</li>
                     <li>已完成</li>
                 </ul>
+            </div>
+            <div class="content">
+                <div id="caption">
+                    <span>任务5</span>
+                    <div class="modify">
+                        <i id="edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>   
+                        <i id="done" class="fa fa fa-check" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div id="date">截止日期：2017-11-08</div>
+                <div id="something" contenteditable="true">
+                    纳萨诺斯·玛瑞斯闭上双眼，用他那不知断裂过多少次的鼻子深吸了一口气。秋天的气息在静谧潮湿的空气中弥漫着——小路上铺设的石板间，野花抽芽的清香混杂期间。真是美妙的香味。熟悉、朴实。这是他曾下定决心永不放弃的味道。
+                </div>
+            </div>            
+            <div class="footer-container">
+                <div class="footer">
+                    <i id="add-class" class="fa fa-plus" aria-hidden="true"></i>
+                    <span>新建分类</span>
+                </div>
                 <div class="footer">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     <span>新增任务</span>
                 </div>
-            </div>
-            <div class="content">
-                <div class="caption">
-                    <span>任务5</span>
-                    <div id="modify">
-                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    </div>
-                </div>
-            </div>
+                <div class="footer-confirm hide">
+                        <span>确认</span>
+                        <span>取消</span>                        
+                </div>                
+            </div>  
         </div>
         <script src="js/jquery-3.2.1.js"></script>
         <script src="js/task0003.js"></script>

@@ -1,4 +1,7 @@
 * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;    
     margin: 0;
     padding: 0;
 }
@@ -11,11 +14,12 @@ body {
     min-width: 980px;
     height: 100%;
     min-height: 500px;
+    padding-top: 60px;
     font-family: "Microsoft YaHei";
 }
 
 .nav {
-    float: left;
+    margin-top: -60px;
     width: 100%;
     height: 60px;
     background-color: #ddd;
@@ -29,31 +33,44 @@ body {
 }
 
 .container {
-    box-sizing: border-box;
+    float: left;
     height: 100%;
-    padding-top: 60px;
+    padding-bottom: 40px;
 }
 
 .category {
-    float: left;
     position: relative;
+    float: left;
+    overflow: auto;
     width: 250px;
     height: 100%;
+    border-right: 1px solid #c0c0c0;
     background-color: #f2f2f2;
 }
 
 .handle {
-    float: left;
     position: relative;
+    float: left;
+    overflow: auto;
     width: 250px;
     height: 100%;
-    border-left: 1px solid #c0c0c0;
+    border-right: 1px solid #c0c0c0;  
+}
+
+.category::-webkit-scrollbar {
+    width:6px;
+}
+
+.category::-webkit-scrollbar-thumb {
+    width: 6px;
+    border-radius: 3px;
+    background-color: #ddd;
 }
 
 .content {
-    margin-left: 501px;
     height: 100%;
-    border-left: 1px solid #c0c0c0;   
+    padding-top: 90px;
+    margin-left: 500px;
 }
 
 .header {
@@ -62,45 +79,120 @@ body {
     text-indent: 1em;
 }
 
+.footer-container {
+    clear: both;
+}
+
 .footer {
-    position: absolute;
-    bottom: 0;
+    float: left;
     height: 40px;
     width: 250px;
     border-top: 1px solid #c0c0c0;
+    border-right: 1px solid #c0c0c0;
     line-height: 40px;
     text-indent: 1em;
     background-color: #f2f2f2;
 }
 
-.caption {
+.footer-confirm {
+    margin-left: 500px;
+    height: 40px;
+    border-top: 1px solid #c0c0c0;
+    line-height: 40px;
+    text-align: center;
+    background-color: #f2f2f2;
+}
+
+.footer-confirm span {
+    margin-right: 50px;
+    cursor: pointer;
+}
+
+#caption {
+    margin-top: -90px;
     position: relative;
     height: 60px;
     line-height: 60px;
     font-size: 18px;
-    text-indent: 1em;
+    text-indent: 25px;
     background-color: #f2f2f2;
 }
 
-#class-list {
+.edit-caption {
+    display: block;
+    width: 100%;
+    margin-top: -90px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 16px;
+    text-indent: 20px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+#date {
+    height: 30px;
+    font-size: 14px;
+    line-height: 30px;
+    text-indent: 25px;
+    background-color: #ffffe0;
+}
+
+.edit-date {
+    display: block;
+    width: 100%;
+    height: 30px;
+    font-size: 12px;
+    line-height: 30px;
+    text-indent: 20px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #ddd;    
+}
+
+#something {
+    height: 100%;
+    padding: 20px 50px;
+    font-size: 16px;
+    text-indent: 2em;
+    line-height: 1.6;
+}
+
+
+#level1Class {
+    list-style-type: none;
+    cursor: pointer;
+}
+
+#level1Class li {
+    position: relative;
+    padding-left: 25px;
+    line-height: 2em;
+}
+
+#level2Class span {
+    margin-left: 0.5em;
+}
+
+#level3Class {
     list-style-type: none;
 }
 
-#class-list li {
+#level3Class li {
     position: relative;
-    margin-left: 25px;
-    margin-bottom: 10px;
+    padding-left: 35px;
+    line-height: 2em;
 }
 
-#class-list span {
+#level3Class span {
     margin-left: 0.5em;
 }
 
 #delete {
     position: absolute;
     right: 10px;
-    top: 3px;
-    cursor: pointer;
+    top: 8px;
 }
 
 #status {
@@ -124,11 +216,12 @@ body {
     background-color: #fff;
 }
 
-#modify {
+.modify {
     position: absolute;
     top: 0;
     right: 30px;
     font-size: 20px;
+    cursor: pointer; 
 }
 
 #add-class {
@@ -155,7 +248,6 @@ body {
     width: 250px;
     height: 150px;
     padding: 30px 20px;
-    box-sizing: border-box;
     text-align: center;
     background-color: #f2f2f2;
     z-index: 1;
