@@ -6,6 +6,14 @@ var singleton = function(fn) {
     }
 };
 
+// 交换类
+jQuery.fn.extend({
+    replaceClass: function(cls1, cls2) {
+        this.removeClass(cls1);
+        this.addClass(cls2);
+    }
+});
+
 // 创建遮罩
 var createMask = singleton(function() {
     var mask = $('<div class="mask hide"></div>');
@@ -116,41 +124,83 @@ $classList.delegate("li", "mouseout", function() {
 })
 
 // 清除类别中高亮状态
-function clearBG() {
+function clearHl() {
     var $item = $classList.find("li");
     $item.css("background-color", "#f2f2f2");
 }
 
 $classList.delegate("li", "click", function() {
     event.stopPropagation();    
-    clearBG();
+    clearHl();
     $(this).css("background-color", "#fff");
     $currentClass = $(this);
 })
 
 $("body").click(function() {
     $currentClass = $classList;
-    clearBG();
+    clearHl();
 })
 
-// 编辑模块
-$("#edit").click(function() {
+// 任务部分
+var $caption = $(".caption"),
+    $date = $(".date"),
+    $something = $(".something"),
+    $content = $(".content"),
+    old_content;
+
+function editStatus() {
     // Caption part
-    var header = $("#caption").find('span').text(),
-        newHeader = $('<input class="edit-caption"></input>');
-    newHeader.val(header);
-    $("#caption").replaceWith(newHeader);
+    $caption.replaceClass("caption", "edit-caption");
+    $('.modify').addClass("hide");
+    $caption.attr("contenteditable", "true");
     // Date part
-    var date = $("#date").text(),
-        newDate = $('<input class="edit-date"></input>');
-    newDate.val(date);
-    $("#date").replaceWith(newDate);
+    $date.replaceClass("date", "edit-date");
+    $date.attr("contenteditable", "true");
     // text area
-    var content = $("#something").text(),
-        newContent = $('<textarea class="edit-something"></textarea>');
-    newContent.val(content);
-    $("#something").replaceWith(newContent);
+    $something.replaceClass("something", "edit-something");
+    $something.attr("contenteditable", "true");
+    // show Confirm footer
+    $(".footer-confirm").removeClass("hide");    
+}
+
+// 新增内容
+$("#add-task").click(function() {
+    // Clear content
+    $caption.text("");
+    $date.html("截止日期:&nbsp;");
+    $something.text("");
+    old_content = $content.html();
+    editStatus();
 })
 
+// 编辑任务
+$("#edit").click(function() {
+    old_content = $content.text();
+    editStatus();
+})
 
+$("#edit-confirm").click(function() {
+    // Caption
+    $caption.replaceClass("edit-caption", "caption");
+    $('.modify').removeClass("hide");
+    $caption.attr("contenteditable", "false");
+    // Date
+    $date.replaceClass("edit-date", "date");
+    $date.attr("contenteditable", "false"); 
+    // Text area confirm
+    $something.replaceClass("edit-something", "something");
+    $something.attr("contenteditable", "false");
+    // Hide confirm bar  
+    $(".footer-confirm").addClass("hide");
+})
 
+$("#edit-cancel").click(function() {    
+    $content.html(old_content);
+    // Hide confirm bar  
+    $(".footer-confirm").addClass("hide");    
+})
+
+// 完成
+$("#done").click(function() {
+    $(this).addClass("hide");
+})
