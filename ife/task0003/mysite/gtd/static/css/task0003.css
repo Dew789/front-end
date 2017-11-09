@@ -163,33 +163,32 @@ body {
     border: none;
 }
 
-
-#level1Class {
+#class-list{
     list-style-type: none;
     cursor: pointer;
 }
 
-#level1Class li {
+#class-list>li {
     position: relative;
     padding-left: 25px;
     line-height: 2em;
 }
 
-#level2Class span {
+#top-class span {
     margin-left: 0.5em;
 }
 
-#level3Class {
+.second-class-wrap {
     list-style-type: none;
 }
 
-#level3Class li {
+#second-class {
     position: relative;
     padding-left: 35px;
     line-height: 2em;
 }
 
-#level3Class span {
+#second-class span {
     margin-left: 0.5em;
 }
 

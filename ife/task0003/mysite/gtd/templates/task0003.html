@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>task0003</title>
-        <link rel="stylesheet" type="text/css" href="css/task0003.css"/>
-        <link rel="stylesheet" type="text/css" href="css/font-awesome-4.7.0/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../static/css/task0003.css"/>
+        <link rel="stylesheet" type="text/css" href="../static/css/font-awesome-4.7.0/css/font-awesome.css"/>
     </head>
     <body>
         <div class="nav">
@@ -14,10 +14,18 @@
             <div class="category">
                 <p class="header">所有任务(0)</p>
                 <p class="header">分类列表</p>
-                <ul id="level1Class">
-                    <li id="level2Class">
-                        <i class="fa fa-folder-open" aria-hidden="true"></i><span>默认分类(0)</span>
+                <ul id="class-list">
+                    <li id="top-class">
+                        <i class="fa fa-folder-open" aria-hidden="true"></i>
+                        <span>默认分类(0)</span>
                     </li>
+                    {% for class in top_class.all %}
+                        <li id="top-class">
+                            <i class="fa fa-folder-open" aria-hidden="true"></i>
+                            <span>{{ class.name }}</span>
+                            <i id="delete" class="fa fa-times hide" aria-hidden="true"></i>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="handle">
@@ -35,7 +43,7 @@
                     <li>task04</li>
                     <li class="date">2017-11-10</li>
                     <li>task05</li>
-                    <li>task06</li>                    
+                    <li>task06</li>  
                 </ul>
             </div>
             <div class="content">
@@ -64,7 +72,7 @@
                 </div>                
             </div>  
         </div>
-        <script src="js/jquery-3.2.1.js"></script>
-        <script src="js/task0003.js"></script>
+        <script src="../static/js/jquery-3.2.1.js"></script>
+        <script src="../static/js/task0003.js"></script>
     </body>
 </html>
