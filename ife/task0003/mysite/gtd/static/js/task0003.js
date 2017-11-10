@@ -84,47 +84,66 @@ $newClass.click(function() {
             return;
         }
         var idName = $currentClass.attr("id");
-        function addClassSuccess() {
-            // 判断一级还是二级类
-            if (idName == "class-list") {
-                var newItem = '<li id="top-class">'
-                             +'<i class="fa fa-folder-open" aria-hidden="true"></i>'
-                             +'<span>' + value + '</span>'
-                             +'<i id="delete" class="fa fa-times hide" aria-hidden="true"></i>'
-                             +'</li>';
-                $currentClass.append(newItem);
-            } 
-            else if (idName == "top-class") {
-                var newItem = '<li id="second-class">'
-                            +'<i class="fa fa fa-file-o" aria-hidden="true"></i>'
-                            +'<span>' + value + '</span>'
-                            +'<i id="delete" class="fa fa-times hide" aria-hidden="true"></i>'
-                            +'</li>';
-                // 判断是否存在唯一ul子元素，也可以用单例模式
-                if ($currentClass.next().is("li") || !$currentClass.next().html()) {
-                    var newSubling = $('<ul class="second-class-wrap"></ul>');
-                    newSubling.append(newItem);
-                    $currentClass.after(newSubling);
-                } else if($currentClass.next().is("ul")) {
-                    $currentClass.next().append(newItem);
-                }
+        function addSecondClass(result) {
+            var newItem = '<li id="second-class">'
+                        +'<a style="display: none">'+ result +'</a>'
+                        +'<i class="fa fa fa-file-o" aria-hidden="true"></i>'+'\n'
+                        +'<span>' + value + '</span>'+'<span>(0)</span>'
+                        +'<i id="delete" class="fa fa-times hide" aria-hidden="true"></i>'
+                        +'</li>';
+            // 判断是否存在唯一ul子元素
+            if ($currentClass.next().is("li") || !$currentClass.next().html()) {
+                var newSubling = $('<ul class="second-class-wrap"></ul>');
+                newSubling.append(newItem);
+                $currentClass.after(newSubling);
+            } else if($currentClass.next().is("ul")) {
+                $currentClass.next().append(newItem);
             }
             hideMask();
         }
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/topclass/",
-            type: "POST",
-            data: {
-                name: value
-            },
-            headers: {
-                "X-CSRFTOKEN": getCookie("csrftoken")
-            },
-            success: addClassSuccess,
-            error: function(xhr) {
-                alert(xhr.responseText + "添加失败，请重试");
-            }
-        })
+        function addTopClass(result) {
+            var newItem = '<li id="top-class">'
+             +'<a style="display: none">'+ result +'</a>'
+             +'<i class="fa fa-folder-open" aria-hidden="true"></i>'+'\n'
+             +'<span>' + value + '</span>'+'<span>(0)</span>'
+             +'<i id="delete" class="fa fa-times hide" aria-hidden="true"></i>'
+             +'</li>';
+            $currentClass.append(newItem);
+            hideMask();
+        }
+        if (idName == "class-list") {
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/topclass/",
+                type: "POST",
+                data: {
+                    name: value
+                },
+                headers: {
+                    "X-CSRFTOKEN": getCookie("csrftoken")
+                },
+                success: addTopClass,
+                error: function(xhr) {
+                    alert(xhr.responseText + "添加失败，请重试");
+                }
+            })
+        }
+        else if (idName == "top-class") {
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/secondclass/",
+                type: "POST",
+                data: {
+                    name: value,
+                    topClass: $currentClass.find("span:first").text()
+                },
+                headers: {
+                    "X-CSRFTOKEN": getCookie("csrftoken")
+                },
+                success: addSecondClass,
+                error: function(xhr) {
+                    alert(xhr.responseText + "添加失败，请重试");
+                }
+            })            
+        }
     }
 })
 
@@ -134,32 +153,54 @@ $("#add-class").click(function() {
     $mask.removeClass("hide");
 })
 
-// 删除类别
+// 显示删除按钮
 $classList.delegate("li", "mouseover", function() {
-    var $del = $(this).find('#delete'),
-        name = $(this).find("span").text(),
-        $that = $(this);
+    var $del = $(this).find("#delete");
     $del.removeClass("hide");
-    $del.click(function() {
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/topclass/"+name+"/",
-            type: "DELETE",
-            headers: {
-                "X-CSRFTOKEN": getCookie("csrftoken")
-            },            
-            success: function() {
-                $that.remove();
-            },         
-            error: function() {
-                alert("删除失败");
-            }
-        })
-    })
 })
 
 $classList.delegate("li", "mouseout", function() {
     var $del = $(this).find('#delete');
     $del.addClass("hide");
+})
+
+// 删除类别
+$classList.delegate("#delete", "click", function() {
+    event.stopPropagation();
+    var $classItem = $(this).parent();
+        classid = $classItem.find("a").text(),
+        idName = $classItem.attr("id");
+
+    if (idName == "top-class") {
+        $.ajax({
+            url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
+            type: "DELETE",
+            headers: {
+                "X-CSRFTOKEN": getCookie("csrftoken")
+            },            
+            success: function() {
+                $classItem.remove();
+            },
+            error: function() {
+                alert("删除失败");
+            }
+        })
+    }
+    else if (idName == "second-class") {
+        $.ajax({
+            url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
+            type: "DELETE",
+            headers: {
+                "X-CSRFTOKEN": getCookie("csrftoken")
+            },            
+            success: function() {
+                $classItem.remove();
+            },
+            error: function() {
+                alert("删除失败");
+            }
+        })            
+    }
 })
 
 // 清除类别中高亮状态
@@ -219,25 +260,55 @@ function showStatus() {
 
 // 新增内容
 $("#add-task").click(function() {
+    event.stopPropagation();
     old_content = [$caption.text(), $date.text(), $something.text()];
     // Clear content
     $caption.text("");
-    $date.html("截止日期:&nbsp;");
+    $date.text("截止日期:");
     $something.text("");
-    editStatus();
+    editStatus();  
 })
 
 // 编辑任务
 $("#edit").click(function() {
+    event.stopPropagation();
     old_content = [$caption.text(), $date.text(), $something.text()];
     editStatus();
 })
 
 $("#edit-confirm").click(function() {
+    event.stopPropagation();
+    var caption = $caption.text(),
+        duedate = $date.text(),
+        content = $something.text(),
+        idName = $currentClass.attr("id"),
+        classid = $currentClass.find("a").text();
+
+    $.ajax({
+        url: "http://127.0.0.1:8000/gtd/task/",
+        type: "POST",
+        data: {
+            caption: caption,
+            duedate: duedate,
+            content: content,
+            idName: idName,
+            classid: classid
+        },
+        headers: {
+            "X-CSRFTOKEN": getCookie("csrftoken")
+        },
+        success: function() {
+            alert("添加成功");
+        },
+        error: function(xhr) {
+            alert(xhr.responseText + "添加失败，请重试");
+        }
+    })    
     showStatus();
 })
 
 $("#edit-cancel").click(function() {
+    event.stopPropagation();
     $caption.text(old_content[0]);
     $date.text(old_content[1]);
     $something.text(old_content[2]);
@@ -246,5 +317,6 @@ $("#edit-cancel").click(function() {
 
 // 事件完成
 $("#done").click(function() {
+    event.stopPropagation();
     $(this).addClass("hide");
 })
