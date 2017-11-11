@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style type="text/css">
+    #first {
+        width: 100px;
+        height: 100px;
+        padding: 50px;
+        background-color: #ff0000;
+    }
+    #second {
+        height: 100px;
+        width: 100px;
+        background-color: #00ffff;
+    }
+    #wrap {
+        padding: 50px;
+        width: 400px;
+        border: 1px solid #000000;
+    }
+</style>
+</head>
+<body>
+    <div id="wrap">
+    <h1 id="first">
+        <p id ="second">
+        </p>
+    </h1>
+    </div>
+</body>
+<script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+    var a = document.getElementById('first'),
+        b = document.getElementById('second'),
+        w = document.getElementById('wrap');
+    function j() {
+        target = event.target;
+        event.stopPropagation();
+        if (target.nodeName.toLowerCase() == "p") {
+            alert("p");
+        }
+    }
+    function k() {
+        target = event.target;
+        event.stopPropagation();
+        if (target.nodeName.toLowerCase() == "h1") {
+            alert("h1");
+        }
+    }
+    function l() {
+        alert("wraps");
+    }
+    w.addEventListener("click", j, false);
+    w.addEventListener("click", k, false);
+    w.addEventListener("click", l, false);
+
+    // $("#wrap").delegate("#first", "click", function() {
+    //     alert("first");
+    // })
+
+    // $("#wrap").delegate("#second", "click", function() {
+    //     alert("second");
+    // })
+
+    // $("#warp").click(function(){
+    //     alert("warp");
+    // })
+
+</script>
+</html>
