@@ -18,10 +18,11 @@ class TopClass(models.Model):
         d = {}
         for task in self.tasks:
             due_date = task.due_date.__str__()
+            item = (task.caption, task.pk, task.status)
             if due_date in d:
-                d[due_date].append(task.caption)
+                d[due_date].append(item)
             else:
-                d[due_date] = [task.caption]
+                d[due_date] = [item]
         return d
 
     def task_todo(self):
@@ -29,10 +30,11 @@ class TopClass(models.Model):
         for task in self.tasks:
             if not task.status:
                 due_date = task.due_date.__str__()
+                item = (task.caption, task.pk, task.status)
                 if due_date in d:
-                    d[due_date].append(task.caption)
+                    d[due_date].append(item)
                 else:
-                    d[due_date] = [task.caption]
+                    d[due_date] = [item]
         return d
 
     def task_finish(self):
@@ -40,10 +42,11 @@ class TopClass(models.Model):
         for task in self.tasks:
             if task.status:
                 due_date = task.due_date.__str__()
+                item = (task.caption, task.pk, task.status)
                 if due_date in d:
-                    d[due_date].append(task.caption)
+                    d[due_date].append(item)
                 else:
-                    d[due_date] = [task.caption]
+                    d[due_date] = [item]
         return d
 
     def __str__(self):
@@ -66,10 +69,11 @@ class SecondClass(models.Model):
         d = {}
         for task in self.tasks:
             due_date = task.due_date.__str__()
+            item = (task.caption, task.pk, task.status)
             if due_date in d:
-                d[due_date].append(task.caption)
+                d[due_date].append(item)
             else:
-                d[due_date] = [task.caption]
+                d[due_date] = [item]
         return d
 
     def task_todo(self):
@@ -77,10 +81,11 @@ class SecondClass(models.Model):
         for task in self.tasks:
             if not task.status:
                 due_date = task.due_date.__str__()
+                item = (task.caption, task.pk, task.status)
                 if due_date in d:
-                    d[due_date].append(task.caption)
+                    d[due_date].append(item)
                 else:
-                    d[due_date] = [task.caption]
+                    d[due_date] = [item]
         return d
 
     def task_finish(self):
@@ -88,10 +93,11 @@ class SecondClass(models.Model):
         for task in self.tasks:
             if task.status:
                 due_date = task.due_date.__str__()
+                item = (task.caption, task.pk, task.status)
                 if due_date in d:
-                    d[due_date].append(task.caption)
+                    d[due_date].append(item)
                 else:
-                    d[due_date] = [task.caption]
+                    d[due_date] = [item]
         return d
 
     def __str__(self):
@@ -100,7 +106,7 @@ class SecondClass(models.Model):
 
 class Task(models.Model):
     task_text = models.CharField(max_length=200)
-    due_date = models.DateField('deadline')        
+    due_date = models.DateField('deadline')
     caption = models.CharField(max_length=30)
     status = models.BooleanField(default=False)
     second_class = models.ForeignKey(SecondClass, null=True)

@@ -213,25 +213,17 @@ body {
     line-height: 2em;
 }
 
-/*#top-class span {
-    margin-left: 0.3em;
-}*/
-
 .second-class-wrap {
     list-style-type: none;
 }
 
-#second-class {
+.second-class {
     position: relative;
     padding-left: 35px;
     line-height: 2em;
 }
 
-/*#second-class span {
-    margin-left: 0.3em;
-}*/
-
-#delete {
+.delete {
     position: absolute;
     right: 10px;
     top: 8px;
@@ -296,4 +288,15 @@ body {
 
 .hide {
     display: none !important;
+}
+
+.item .title {
+    position: relative;
+    cursor: pointer;
+}
+
+#all,
+#todo,
+#finish {
+    cursor: pointer;
 }

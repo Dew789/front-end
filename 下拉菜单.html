@@ -24,7 +24,7 @@ window.onload=function(){
    
     // 点击三角时
     title.onclick=function(event){
-        event = event || window.event;
+        var event = event || window.event;
         event.stopPropagation?event.stopPropagation():event.cancelBubble=true;
         menu.style.display = "block";
     }
@@ -55,7 +55,7 @@ window.onload=function(){
    // 滑过滑过、离开、点击每个选项时
    // 38 40 13
    document.onkeydown = function(event) {
-      event = event || window.event;
+      var event = event || window.event;
       if (event.keyCode==38) {
         clearLast()
         index = next_index(false);

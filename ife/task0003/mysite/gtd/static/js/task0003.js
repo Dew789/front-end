@@ -83,13 +83,12 @@ $newClass.click(function() {
             alert("输入字数不能超过10");
             return;
         }
-        var idName = $currentClass.attr("id");
+        var idName = $currentClass.attr("class");
         function addSecondClass(result) {
-            var newItem = '<li id="second-class">'
-                        +'<a style="display: none">'+ result +'</a>'
+            var newItem = '<li class="second-class" pk="'+result+'">'
                         +'<i class="fa fa fa-file-o" aria-hidden="true"></i>'+'\n'
                         +'<span>' + value + '</span>'+'<span>(0)</span>'
-                        +'<i id="delete" class="fa fa-times hide" aria-hidden="true"></i>'
+                        +'<i class="fa fa-times delete hide" aria-hidden="true"></i>'
                         +'</li>';
             // 判断是否存在唯一ul子元素
             if ($currentClass.next().is("li") || !$currentClass.next().html()) {
@@ -102,13 +101,12 @@ $newClass.click(function() {
             hideMask();
         }
         function addTopClass(result) {
-            var newItem = '<li id="top-class">'
-             +'<a style="display: none">'+ result +'</a>'
+            var newItem = '<li class="top-class" pk="'+result+'">'
              +'<i class="fa fa-folder-open" aria-hidden="true"></i>'+'\n'
              +'<span>' + value + '</span>'+'<span>(0)</span>'
-             +'<i id="delete" class="fa fa-times hide" aria-hidden="true"></i>'
+             +'<i class="fa fa-times delete hide" aria-hidden="true"></i>'
              +'</li>';
-            $currentClass.append(newItem);
+            $currentClass.prepend(newItem);
             hideMask();
         }
         if (idName == "class-list") {
@@ -155,52 +153,13 @@ $("#add-class").click(function() {
 
 // 显示删除按钮
 $classList.delegate("li", "mouseover", function() {
-    var $del = $(this).find("#delete");
+    var $del = $(this).find(".delete");
     $del.removeClass("hide");
 })
 
 $classList.delegate("li", "mouseout", function() {
-    var $del = $(this).find('#delete');
+    var $del = $(this).find('.delete');
     $del.addClass("hide");
-})
-
-// 删除类别
-$classList.delegate("#delete", "click", function() {
-    event.stopPropagation();
-    var $classItem = $(this).parent();
-        classid = $classItem.find("a").text(),
-        idName = $classItem.attr("id");
-
-    if (idName == "top-class") {
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
-            type: "DELETE",
-            headers: {
-                "X-CSRFTOKEN": getCookie("csrftoken")
-            },            
-            success: function() {
-                $classItem.remove();
-            },
-            error: function() {
-                alert("删除失败");
-            }
-        })
-    }
-    else if (idName == "second-class") {
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
-            type: "DELETE",
-            headers: {
-                "X-CSRFTOKEN": getCookie("csrftoken")
-            },            
-            success: function() {
-                $classItem.remove();
-            },
-            error: function() {
-                alert("删除失败");
-            }
-        })            
-    }
 })
 
 // 清除类别中高亮状态
@@ -209,17 +168,265 @@ function clearHl() {
     $item.css("background-color", "#f2f2f2");
 }
 
-$classList.delegate("li", "click", function() {
-    event.stopPropagation();    
+$("body").click(function() {
     clearHl();
-    $(this).css("background-color", "#fff");
-    $currentClass = $(this);
+    $currentClass = $classList;
 })
 
-$("body").click(function() {
-    $currentClass = $classList;
-    clearHl();
+// 删除类别
+function deleteClass(event)  {
+    event.stopPropagation();
+    var $target = $(event.target);
+    if ($target.is(".delete")) {
+        var $classItem = $target.parent(),
+            classid = $classItem.attr("pk"),
+            idName = $classItem.attr("class");
+
+        if (idName == "top-class") {
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
+                type: "DELETE",
+                headers: {
+                    "X-CSRFTOKEN": getCookie("csrftoken")
+                },            
+                success: function() {
+                    if ($classItem.next().is("ul")) {
+                        $classItem.next().remove();
+                    }                
+                    $classItem.remove();
+                },
+                error: function() {
+                    alert("删除失败");
+                }
+            })
+        }
+        else if (idName == "second-class") {
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
+                type: "DELETE",
+                headers: {
+                    "X-CSRFTOKEN": getCookie("csrftoken")
+                },            
+                success: function() {
+                    $classItem.remove();
+                },
+                error: function() {
+                    alert("删除失败");
+                }
+            })            
+        }
+    }
+}
+
+function getClassTasks(event) {
+    event.stopPropagation();
+    var $target = $(event.target);
+    if ($target.is(".delete")) {
+        return;
+    }
+    $mainTarget = $target.is("li")?$target:$target.parent();
+    if ($mainTarget.is("li")) {
+        clearHl();
+        $mainTarget.css("background-color", "#fff");
+        $currentClass = $mainTarget;
+        var classType = $currentClass.attr("class"),
+            classid = $currentClass.attr("pk");
+        // Change "top-class" into "topclass" 
+        classType = classType.split("-").join("");
+        $.ajax({
+            url: "http://127.0.0.1:8000/gtd/"+classType+"/"+classid +"/"+"all/",
+            type: "GET",
+            success: function(result) {
+                var content = "";
+                $.each(result, function(date, tasks){
+                    content = content + '<li class="date">' + date + '</li>'
+                    for (var task of tasks) {
+                        var head;
+                        if (task[2]) {
+                            head = '<li class="title" pk="'+ task[1]+ '"style="color: #32cd32">'
+                        } 
+                        else {
+                            head = '<li class="title" pk="'+ task[1]+ '">'
+                        }
+                        content = content + head
+                            + task[0]
+                            + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
+                            + '</li>';
+                    }
+                });
+                $taskList.html(content);
+                $caption.text("");
+                $date.text("");
+                $something.text("");
+            },
+            error: function() {
+                alert("显示失败");
+            }
+        })
+    }
+}
+
+// Jquery代理由于设计方式无法实现此功能
+// 采用原生代理
+var classList = $classList[0];
+classList.addEventListener("click", deleteClass, false);
+classList.addEventListener("click", getClassTasks, false);
+
+
+// Handle部分
+function getCurrentTasksWithStatus(status) {
+    var classType = $currentClass.attr("class"),
+        classid = $currentClass.attr("pk");
+    // Change "top-class" into "topclass" 
+    classType = classType.split("-").join("");
+    $.ajax({
+        url: "http://127.0.0.1:8000/gtd/"+classType+"/"+classid +"/"+status+"/",
+        type: "GET",
+        success: function(result) {
+            var content = "";
+            $.each(result, function(date, tasks){
+                content = content + '<li class="date">' + date + '</li>'
+                for (var task of tasks) {
+                    var head;
+                    if (task[2]) {
+                        head = '<li class="title" pk="' + task[1]+ '" style="color: #32cd32">'
+                    } 
+                    else {
+                        head = '<li class="title" pk="' + task[1] +'">'
+                    }
+                    content = content + head
+                        + task[0]
+                        + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
+                        + '</li>';
+                }
+            });
+            $taskList.html(content);
+        },
+        error: function() {
+            alert("显示失败");
+        }
+    })
+}
+
+function clearStatusHl() {
+    $(".status li").removeClass("select");
+}
+
+$("#all").click(function() {
+    event.stopPropagation();
+    if ($currentClass === $classList) {
+        $("#default").trigger("click");
+        clearHl();
+        $("#default").css("background-color", "#fff")
+    } 
+    else {
+        $currentClass.trigger("click");
+    }
+    clearStatusHl();
+    $(this).addClass("select");
 })
+
+$("#todo").click(function() {
+    event.stopPropagation();
+    if ($currentClass === $classList) {
+        $currentClass = $("#default");
+        $currentClass.css("background-color", "#fff");
+    } 
+    getCurrentTasksWithStatus("todo");
+    clearStatusHl();
+    $(this).addClass("select");
+})
+
+$("#finish").click(function() {
+    event.stopPropagation();
+    if ($currentClass === $classList) {
+        $currentClass = $("#default");
+        $currentClass.css("background-color", "#fff");
+    } 
+    getCurrentTasksWithStatus("finish");
+    clearStatusHl();
+    $(this).addClass("select");
+})
+
+var $taskList = $("#tasks");
+
+$taskList.delegate("li.title", "mouseover", function() {
+    var $del = $(this).find(".delete");
+    $del.removeClass("hide");
+})
+
+$taskList.delegate("li.title", "mouseout", function() {
+    var $del = $(this).find('.delete');
+    $del.addClass("hide");
+})
+
+function clearHandelHl() {
+    var $item = $taskList.find("li.title");
+    $item.css("background-color", "#fff");
+}
+
+var $currentTask = null;
+
+function deleteTask(event) {
+    event.stopPropagation();
+    var $target = $(event.target);
+    if ($target.is(".delete")) {
+        var $taskItem = $target.parent();
+            taskid = $taskItem.attr("pk"),
+        $.ajax({
+            url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
+            type: "DELETE",
+            headers: {
+                "X-CSRFTOKEN": getCookie("csrftoken")
+            },            
+            success: function() {
+                if (($taskItem.next().is(".date") || !$taskItem.next().html())
+                    && $taskItem.prev().is(".date")) {
+                    $taskItem.prev().remove();
+                }
+                $taskItem.remove();
+            },
+            error: function() {
+                alert("删除失败");
+            }
+        })
+    }
+}
+
+function getTask(event) {
+    event.stopPropagation();
+    var $target = $(event.target);
+    if ($target.is("li.title")) {
+        var taskid = $target.attr("pk");
+            $that = $target;
+        $.ajax({
+            url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
+            type: "GET",
+            headers: {
+                "X-CSRFTOKEN": getCookie("csrftoken")
+            },            
+            success: function(result) {
+                clearHandelHl();
+                $that.css("background-color", "#f2f2f2")
+                $caption.text(result.title);
+                $date.text("截止日期:"+result.date);
+                $something.text(result.content);
+                result.status?$("#done").addClass("hide"):$("#done").removeClass("hide");
+                $currentTask = $target;
+            },
+            error: function() {
+                alert("获取失败");
+            }
+        })
+    }
+}
+
+// Jquery代理由于设计方式无法实现此功能
+// 采用原生代理
+var taskList = $taskList[0];
+taskList.addEventListener("click", deleteTask, false);
+taskList.addEventListener("click", getTask, false);
+
 
 // 任务部分
 var $content = $(".content"),
@@ -261,6 +468,7 @@ function showStatus() {
 // 新增内容
 $("#add-task").click(function() {
     event.stopPropagation();
+    clearHandelHl();
     old_content = [$caption.text(), $date.text(), $something.text()];
     // Clear content
     $caption.text("");
@@ -276,13 +484,60 @@ $("#edit").click(function() {
     editStatus();
 })
 
+function submitTasksModifyHandle(pk) {
+    var classType = $currentClass.attr("class"),
+        classid = $currentClass.attr("pk");
+    // Change "top-class" into "topclass" 
+    classType = classType.split("-").join("");
+    $.ajax({
+        url: "http://127.0.0.1:8000/gtd/"+classType+"/"+classid +"/"+"all/",
+        type: "GET",
+        success: function(result) {
+            var content = "";
+            $.each(result, function(date, tasks){
+                content = content + '<li class="date">' + date + '</li>'
+                for (var task of tasks) {
+                    var head;
+                    if (task[2]) {
+                        head = '<li class="title" pk="' + task[1]+ '" style="color: #32cd32">'
+                    } 
+                    else {
+                        head = '<li class="title" pk="' + task[1] +'">'
+                    }
+                    content = content + head
+                        + task[0]
+                        + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
+                        + '</li>';
+                }
+            });
+            $taskList.html(content);
+            for (var item of $("#tasks").find("li.title")) {
+                if ($(item).attr("pk") == pk) {
+                    $currentTask = $(item);
+                }
+            }
+            clearHandelHl();
+            $currentTask.css("background-color", "#f2f2f2");
+        },
+        error: function() {
+            alert("显示失败");
+        }
+    })
+}
+
 $("#edit-confirm").click(function() {
     event.stopPropagation();
     var caption = $caption.text(),
         duedate = $date.text(),
         content = $something.text(),
-        idName = $currentClass.attr("id"),
-        classid = $currentClass.find("a").text();
+        classType = $currentClass.attr("class"),
+        classid = $currentClass.attr("pk");
+
+    if ($currentClass == $classList) {
+        $currentClass = $("#default");
+        classType = "top-class"
+        classid = 1;
+    }
 
     $.ajax({
         url: "http://127.0.0.1:8000/gtd/task/",
@@ -291,19 +546,22 @@ $("#edit-confirm").click(function() {
             caption: caption,
             duedate: duedate,
             content: content,
-            idName: idName,
+            classType: classType,
             classid: classid
         },
         headers: {
             "X-CSRFTOKEN": getCookie("csrftoken")
         },
-        success: function() {
-            alert("添加成功");
+        success: function(pk) {
+            submitTasksModifyHandle(pk);
+            clearStatusHl();
+            $("#all").addClass("select");
         },
         error: function(xhr) {
             alert(xhr.responseText + "添加失败，请重试");
         }
-    })    
+    })
+
     showStatus();
 })
 
@@ -315,8 +573,42 @@ $("#edit-cancel").click(function() {
     showStatus();
 })
 
-// 事件完成
+// 修改时间状态为完成
 $("#done").click(function() {
     event.stopPropagation();
-    $(this).addClass("hide");
+    var taskid = $currentTask.attr("pk"),
+        $that = $(this);
+    $.ajax({
+        url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
+        type: "PUT",
+        headers: {
+            "X-CSRFTOKEN": getCookie("csrftoken")
+        },          
+        success: function() {
+            $currentTask.css("color", "#32cd32");
+            $that.addClass("hide");
+        },
+        error: function() {
+            alert("修改状态失败");
+        }
+    })
+})
+
+// 防止编辑状态修改current_class
+$(".caption").click(function() {
+    if ($(this).attr("contenteditable")) {
+        event.stopPropagation()
+    }
+})
+
+$(".date").click(function() {
+    if ($(this).attr("contenteditable")) {
+        event.stopPropagation()
+    }
+})
+
+$(".something").click(function() {
+    if ($(this).attr("contenteditable")) {
+        event.stopPropagation()
+    }
 })

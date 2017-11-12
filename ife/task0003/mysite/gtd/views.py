@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, QueryDict
+from django.http import HttpResponse, JsonResponse, QueryDict
 from django.views.generic import View
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
@@ -33,10 +33,22 @@ class TopClassView(View):
 
 class TopClassItemView(View):
 
-    def delete(self, request, classid):
+    def delete(self, request, classid, aspect):
         item = TopClass.objects.get(pk=classid)
         item.delete()
         return HttpResponse(status=200)
+
+    def get(self, request, classid, aspect):
+        item = TopClass.objects.get(pk=classid)
+        aspect = aspect.rstrip("/")
+
+        if aspect == "all":
+            resp = JsonResponse(item.task_all())
+        elif aspect == "todo":
+            resp = JsonResponse(item.task_todo())
+        elif aspect == "finish":
+            resp = JsonResponse(item.task_finish())
+        return resp
 
 
 class SecondClassView(View):
@@ -44,6 +56,9 @@ class SecondClassView(View):
     def post(self, request):
         name = request.POST['name']
         top_class_name = request.POST['topClass']
+        if top_class_name == "默认分类":
+            return HttpResponse(status=500, content="不能添加子分类, ")
+
         try:
             top_class = TopClass.objects.get(name=top_class_name)
         except:
@@ -61,10 +76,22 @@ class SecondClassView(View):
 
 class SecondClassItemView(View):
 
-    def delete(self, request, classid):
+    def delete(self, request, classid, aspect):
         item = SecondClass.objects.get(pk=classid)
         item.delete()
         return HttpResponse(status=200)
+
+    def get(self, request, classid, aspect):
+        item = SecondClass.objects.get(pk=classid)
+        aspect = aspect.rstrip("/")
+
+        if aspect == "all":
+            resp = JsonResponse(item.task_all())
+        elif aspect == "todo":
+            resp = JsonResponse(item.task_todo())
+        elif aspect == "finish":
+            resp = JsonResponse(item.task_finish())
+        return resp
 
 
 class TaskView(View):
@@ -72,24 +99,46 @@ class TaskView(View):
     def post(self, request):
         caption = request.POST['caption']
         duedate = request.POST['duedate']
-        duedate = duedate.split(":")[1]        
+        duedate = duedate.split(":")[1]
         content = request.POST['content'].strip()
-        id_name = request.POST['idName']
+        classtype = request.POST['classType']
         classid = request.POST['classid']
 
-        if id_name == "class-list":
-            classid = 1
-            id_name = "top-class"
-
-        if id_name == "top-class":           
+        if classtype == "top-class":
             top_class =  TopClass.objects.get(pk=classid)
             item = Task(caption=caption, due_date=duedate, 
                 task_text=content, top_class=top_class)
             item.save()
-        elif id_name == "second-class":
+        elif classtype == "second-class":
             second_class = SecondClass.objects.get(pk=classid)
             item = Task(caption=caption, due_date=duedate, 
                 task_text=content, second_class=second_class)
             item.save()
 
+        return HttpResponse(status=200, content=item.pk)
+
+
+class TaskItemView(View):
+
+    def delete(self ,request, taskid):
+        item = Task.objects.get(pk=taskid)
+        item.delete()
+        return HttpResponse(status=200)
+
+    def get(self ,request, taskid):
+        item = Task.objects.get(pk=taskid)
+        result = {}
+        result["title"] = item.caption
+        result["date"] = item.due_date.__str__()
+        result["content"] = item.task_text
+        result["status"] = item.status
+
+        resp = JsonResponse(result)
+        return resp
+
+    def put(self ,request, taskid):
+        item = Task.objects.get(pk=taskid)
+        item.status = True
+
+        item.save()
         return HttpResponse(status=200)

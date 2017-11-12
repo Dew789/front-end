@@ -12,73 +12,65 @@
         </div>
         <div class="container">
             <div class="category">
-                <p class="header">所有任务<span>(0)</span></p>
+                <p class="header">所有任务</p>
                 <p class="header">分类列表</p>
-                <ul id="class-list">
-                    <li id="top-class">
-                        <a style="display: none">1</a>
-                        <i class="fa fa-folder-open" aria-hidden="true"></i>
-                        <span>默认分类</span>
-                    </li>
-                {% if default.secondclass_set %}
-                    <ul class="second-class-wrap">
-                    {% for sec_item in default.secondclass_set.all %}
-                        <li id="second-class">
-                            <a style="display: none">{{ sec_item.pk }}</a>
-                            <i class="fa fa fa-file-o" aria-hidden="true"></i>
-                            <span>{{ sec_item.name }}</span>
-                            <i id="delete" class="fa fa-times hide" aria-hidden="true"></i>
-                        </li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
+                <ul id="class-list" class="class-list">
                 {% for top_item in top_class_list %}
-                    <li id="top-class">
-                        <a style="display: none">{{ top_item.pk }}</a>
+                    <li class="top-class" pk="{{ top_item.pk }}">
                         <i class="fa fa-folder-open" aria-hidden="true"></i>
                         <span>{{ top_item.name }}</span>
-                        <i id="delete" class="fa fa-times hide" aria-hidden="true"></i>
+                        <i class="fa fa-times delete hide" aria-hidden="true"></i>
                     </li>
                     {% if top_item.secondclass_set %}
                     <ul class="second-class-wrap">
                     {% for sec_item in top_item.secondclass_set.all %}
-                        <li id="second-class">
-                            <a style="display: none">{{ sec_item.pk }}</a>
+                        <li class="second-class" pk="{{ sec_item.pk }}">
                             <i class="fa fa fa-file-o" aria-hidden="true"></i>
                             <span>{{ sec_item.name }}</span>
-                            <i id="delete" class="fa fa-times hide" aria-hidden="true"></i>
+                            <i class="fa fa-times dlete hide" aria-hidden="true"></i>
                         </li>
                     {% endfor %}
                     </ul>
                     {% endif %}
                 {% endfor %}
+                    <li id="default" class="top-class" pk="1">
+                        <i class="fa fa-folder-open" aria-hidden="true"></i>
+                        <span>默认分类</span>
+                    </li>
                 </ul>
             </div>
             <div class="handle">
                 <ul class="status">
-                    <li class="select">所有</li>
-                    <li>未完成</li>
-                    <li>已完成</li>
+                    <li id="all" class="select">所有</li>
+                    <li id="todo">未完成</li>
+                    <li id="finish">已完成</li>
                 </ul>
-                <ul class="item">
-                    {% for date, tasks in default_task.items %}
-                    <li class="date">{{ date }}</li>
-                        {% for task in tasks %}
-                        <li>{{ task }}</li>
+                <div class="item">
+                    <ul id="tasks">
+                        {% for date, tasks in default_task.items %}
+                        <li class="date">{{ date }}</li>
+                            {% for caption, id, status in tasks %}
+                                {% if status %}
+                                    <li class="title" pk="{{ id }}" style="color: #32cd32">
+                                {% else %}
+                                    <li class="title" pk="{{ id }}">
+                                {% endif %}
+                            {{ caption }}
+                            <i class="fa fa-times hide delete" aria-hidden="true"></i>
+                            </li>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </ul>
+                    </ul>
+                </div>
             </div>
             <div class="content">
-                <div class="caption">任务5</div>
+                <div class="caption"></div>
                 <div class="modify">
                     <i id="edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>   
                     <i id="done" class="fa fa fa-check" aria-hidden="true"></i>
                 </div>
-                <div class="date">截止日期:2017-11-08</div>
-                <div class="something">
-                    纳萨诺斯·玛瑞斯闭上双眼，用他那不知断裂过多少次的鼻子深吸了一口气。秋天的气息在静谧潮湿的空气中弥漫着——小路上铺设的石板间，野花抽芽的清香混杂期间。真是美妙的香味。熟悉、朴实。这是他曾下定决心永不放弃的味道。
-                </div>
+                <div class="date"></div>
+                <div class="something"></div>
             </div>            
             <div class="footer-container">
                 <div class="footer">
@@ -90,8 +82,8 @@
                     <span>新增任务</span>
                 </div>
                 <div class="footer-confirm hide">
-                        <span id="edit-confirm">确认</span>
-                        <span id="edit-cancel">取消</span>
+                    <span id="edit-confirm">确认</span>
+                    <span id="edit-cancel">取消</span>
                 </div>                
             </div>  
         </div>
