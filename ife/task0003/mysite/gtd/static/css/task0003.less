@@ -1,0 +1,319 @@
+@nav-color: #ddd;
+@bg-color: #f2f2f2;
+@border-style: 1px solid #c0c0c0;
+
+* {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;    
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-width: 980px;
+    height: 100%;
+    min-height: 500px;
+    padding-top: 60px;
+    font-family: "Microsoft YaHei";
+}
+
+/*
+ *整体布局
+ */
+.nav {
+    margin-top: -60px;
+    width: 100%;
+    height: 60px;
+    background-color: @nav-color;
+    p {
+        font-size: 25px;
+        text-indent: 2em;
+        line-height: 60px;
+        color: #a9a9a9;
+    }
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 40px;
+}
+
+.category {
+    position: relative;
+    float: left;
+    overflow: auto;
+    width: 250px;
+    height: 100%;
+    border-right: @border-style;
+    background-color: @bg-color;
+    // scroll bar
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        width: 4px;
+        border-radius: 2px;
+        background-color: @nav-color;
+    }
+}
+
+.handle {
+    float: left;
+    padding-top: 40px;
+    width: 250px;
+    height: 100%;
+    border-right: @border-style;  
+}
+
+.content {
+    position: relative;
+    height: 100%;
+    padding-top: 90px;
+    margin-left: 500px;
+}
+
+.footer-container {
+    clear: both;
+}
+
+/* 
+ *category 任务列表部分
+ */
+/*重置滚动条样式*/
+.header {
+    height: 40px;
+    line-height: 40px;
+    text-indent: 1em;
+}
+
+#class-list{
+    list-style-type: none;
+    cursor: pointer;
+    > li {
+    position: relative;
+    padding-left: 25px;
+    line-height: 2em;
+    }
+}
+
+.second-class-wrap {
+    list-style-type: none;
+}
+
+.second-class {
+    position: relative;
+    padding-left: 35px;
+    line-height: 2em;
+}
+
+/* 
+ *新建类产生新窗口和遮罩
+ */
+.mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    min-height: 500px;
+    background-color: rgba(0, 0 ,0, .5);
+}
+
+.new-class {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -125px;
+    width: 250px;
+    height: 150px;
+    padding: 30px 20px;
+    text-align: center;
+    background-color: @bg-color;
+    z-index: 1;
+    p {
+        margin-bottom: 10px;
+    }
+    input {
+    margin-bottom: 10px;
+    }
+}
+
+.btn {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.delete {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+}
+
+/* 
+ *handle 任务列表部分
+ */
+.status {
+    margin-top: -40px;
+    height: 40px;
+    background-color: @bg-color; 
+    list-style-type: none;
+    li {
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 0.8em;
+        width: 50px;
+        border-radius: 1px;
+        text-align: center;
+        font-size: 14px; 
+        line-height: 1.6;
+    }
+}
+
+#all,
+#todo,
+#finish {
+    cursor: pointer;
+}
+
+.select {
+    background-color: #fff;
+}
+
+.item {
+    overflow: auto;
+    height: 100%;
+    li {
+        height: 30px;
+        font-size: 14px;
+        line-height: 30px;
+        text-indent: 25px;
+    }
+    // scroll bar
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        width: 4px;
+        border-radius: 2px;
+        background-color: @nav-color;
+    }
+}
+
+.title {
+    position: relative;
+    cursor: pointer;
+}
+
+/*
+ *content内容部分
+ */
+.captionStyle(@fontSize) {
+    margin-top: -90px;
+    height: 60px;
+    line-height: 60px;
+    font-size: @fontSize;
+    text-indent: 25px;
+}
+
+.caption {
+    .captionStyle(25px);
+    background-color: @bg-color;
+}
+
+.edit-caption {
+    .captionStyle(16px);
+    border: none;
+    border-bottom: @border-style;
+}
+
+.dateStyle {
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    text-indent: 25px;
+}
+
+.date {
+    .dateStyle;
+    background-color: #ffffe0;
+}
+
+.edit-date {
+    .dateStyle;
+    border: none;
+    border-bottom: @border-style;
+}
+
+.somethingStyle(@fontSize) {
+    height: 100%;
+    padding: 20px 50px;
+    font-size: @fontSize;
+    line-height: 1.6;
+    text-indent: 2em;
+}
+
+.something {
+    .somethingStyle(16px);
+    word-break: break-all;
+}
+
+.edit-something {
+    .somethingStyle(14px);
+    border: none;
+}
+
+.modify {
+    position: absolute;
+    top: 0px;
+    right: 30px;
+    line-height: 60px;    
+    font-size: 20px;
+    letter-spacing: 5px;
+    cursor: pointer;    
+}
+
+/* 
+ *Footer 
+ */
+.footer {
+    float: left;
+    height: 40px;
+    width: 250px;
+    border-top: @border-style;
+    border-right: @border-style;
+    line-height: 40px;
+    text-indent: 1em;
+    background-color: @bg-color;
+    span {
+        margin-right: 50px;
+        cursor: pointer;
+    }
+}
+
+.footer-confirm {
+    margin-left: 500px;
+    height: 40px;
+    border-top: @border-style;
+    line-height: 40px;
+    text-align: center;
+    background-color: @bg-color;
+}
+
+/*新建分类与任务按钮*/
+#add-task,
+#add-class {
+    cursor: pointer;
+}
+
+.hide {
+    display: none !important;
+}
