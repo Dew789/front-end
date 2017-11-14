@@ -13,9 +13,15 @@ def index(request):
     default_obj = TopClass.objects.get(name="默认分类")
     context['default'] = default_obj
     context['top_class_list'] = TopClass.objects.all()[1:]
-    context['default_task'] = default_obj.task_all()
-    print(default_obj.task_all())
+
+    all_todo_num = 0
+    for task in Task.objects.all():
+        if not task.status:
+            all_todo_num+=1
+    context['all_todo_num'] = all_todo_num
+
     return render(request, 'task0003.html', context)
+
 
 class TopClassView(View):
 
@@ -96,7 +102,7 @@ class SecondClassItemView(View):
 
 class TaskView(View):
 
-    def post(self, request):
+    def post(self, request, aspect):
         caption = request.POST['caption']
         duedate = request.POST['duedate']
         duedate = duedate.split(":")[1]
@@ -116,6 +122,17 @@ class TaskView(View):
             item.save()
 
         return HttpResponse(status=200, content=item.pk)
+
+    def get(self, request, aspect):
+        aspect = aspect.rstrip("/")
+
+        if aspect == "all":
+            resp = JsonResponse(Task.task_all())
+        elif aspect == "todo":
+            resp = JsonResponse(Task.task_todo())
+        elif aspect == "finish":
+            resp = JsonResponse(Task.task_finish())
+        return resp
 
 
 class TaskItemView(View):

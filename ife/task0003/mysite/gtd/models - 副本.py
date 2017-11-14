@@ -1,7 +1,18 @@
 from django.db import models
 
+class TopClass(models.Model):
+    name = models.CharField(max_length=10, unique=True)
 
-class _BaseCLass(object):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        task_list = []
+        for task in self.task_set.all():
+            task_list.append(task)
+        for sec_class in self.secondclass_set.all():
+            for task in sec_class.task_set.all():
+                task_list.append(task)
+        self.tasks = task_list
 
     def task_all(self):
         d = {}
@@ -48,24 +59,9 @@ class _BaseCLass(object):
 
     def __str__(self):
         return self.name
-        
-
-class TopClass(_BaseCLass, models.Model):
-    name = models.CharField(max_length=10, unique=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        task_list = []
-        for task in self.task_set.all():
-            task_list.append(task)
-        for sec_class in self.secondclass_set.all():
-            for task in sec_class.task_set.all():
-                task_list.append(task)
-        self.tasks = task_list
 
 
-class SecondClass(_BaseCLass, models.Model):
+class SecondClass(models.Model):
     name = models.CharField(max_length=10)
     top_class = models.ForeignKey(TopClass)
 
@@ -76,6 +72,52 @@ class SecondClass(_BaseCLass, models.Model):
         for task in self.task_set.all():
             task_list.append(task)
         self.tasks = task_list
+
+    def task_all(self):
+        d = {}
+        for task in self.tasks:
+            due_date = task.due_date.__str__()
+            item = (task.caption, task.pk, task.status)
+            if due_date in d:
+                d[due_date].append(item)
+            else:
+                d[due_date] = [item]
+        return d
+
+    def task_todo(self):
+        d = {}
+        for task in self.tasks:
+            if not task.status:
+                due_date = task.due_date.__str__()
+                item = (task.caption, task.pk, task.status)
+                if due_date in d:
+                    d[due_date].append(item)
+                else:
+                    d[due_date] = [item]
+        return d
+
+    def task_finish(self):
+        d = {}
+        for task in self.tasks:
+            if task.status:
+                due_date = task.due_date.__str__()
+                item = (task.caption, task.pk, task.status)
+                if due_date in d:
+                    d[due_date].append(item)
+                else:
+                    d[due_date] = [item]
+        return d
+
+    def todo_num(self):
+        count = 0
+        for task in self.tasks:
+            if not task.status:
+                count+=1
+
+        return count
+
+    def __str__(self):
+        return self.name
 
 
 class Task(models.Model):

@@ -16,7 +16,7 @@ function getCookie(cookieName) {
     return "";
 }
 
-// 交换类
+// 交换类两个jquery元素的类
 jQuery.fn.extend({
     replaceClass: function(cls1, cls2) {
         this.removeClass(cls1);
@@ -26,48 +26,87 @@ jQuery.fn.extend({
 
 // 创建遮罩
 var createMask = singleton(function() {
-    var mask = $('<div class="mask hide"></div>');
-    $("body").append(mask);
-    return mask;
+    var $html = $('<div class="mask hide"></div>');
+    $("body").append($html);
+    return $html;
 });
 
 // 创建新类面板
-var createClass = singleton(function() {
-    var $prompt = $('<div class="new-class hide">'
-                    + '<p>输入新的分类:</p>'
-                    + '<input type="text">'
-                    + '<div>'
-                    + '<span class="btn" name="confirm">确认</span>'
-                    + '<span class="btn" name="cancel">取消</span>'
-                    + '<div>'
-                    + '</div>');
-    $("body").append($prompt);
-    return $prompt;
+var createClassPannel = singleton(function() {
+    var html = [
+        '<div class="new-class hide">',
+            '<p>输入新的分类:</p>',
+            '<input type="text">',
+            '<div>',
+                '<span class="btn" name="confirm">确认</span>',
+                '<span class="btn" name="cancel">取消</span>',
+                '<div>',
+        '</div>'
+    ];
+    var $html = $(html.join(''));
+    $("body").append($html);
+    return $html;
+});
+
+// 创建删除面板
+var createDeletePannel = singleton(function() {
+    var html = [
+        '<div class="deletePannel">',
+            '<p class="move-area">删除</p>',
+            '<p class="message">确认删除？</p>',
+            '<div>',
+                '<span class="btn" name="confirm">确认</span>',
+                '<span class="btn" name="cancel">取消</span>',
+            '</div>',
+        '</div>'
+    ];
+    var $html = $(html.join(""));
+    $("body").append($html);
+    return $html;
 });
 
 var $mask = createMask(),
-    $newClass = createClass(),
+    $addClassPanel = createClassPannel(),
+    $inputName = $addClassPanel.find("input"),
+    $deletePannel = createDeletePannel(),
     $classList = $("#class-list"),
-    $inputName = $newClass.find("input"),
-    $currentClass = $classList;
+    classList = $classList[0],
+    $taskList = $("#tasks"),
+    taskList = $taskList[0],
+    $currentClass = $classList,
+    $currentTask = null,
+    $content = $(".content"),
+    $caption = $content.find(".caption"),
+    $date = $content.find(".date"),
+    $something = $content.find(".something"),
+    $edit = $("#edit"),
+    $done = $("#done"),
+    old_content;
 
-// 显示遮罩并清除输入的新分类
 function hideMask() {
-    $newClass.addClass("hide");
+    $addClassPanel.addClass("hide");
     $mask.addClass("hide");
     $inputName.val("");
 }
+
+// 隐藏遮罩
+$mask.click(function() {
+    hideMask();
+})
 
 $inputName.focus(function() {
     $inputName.val("");
 })
 
-$mask.click(function() {
-    hideMask();
+// 触发遮罩以及添加面板
+$("#add-class").click(function() {
+    event.stopPropagation();
+    $addClassPanel.removeClass("hide");
+    $mask.removeClass("hide");
 })
 
-// 添加新类型
-$newClass.click(function() {
+// 添加新分类
+$addClassPanel.click(function() {
     event.stopPropagation();
     var name = $(event.target).attr("name");
     if (name == "cancel") {
@@ -87,7 +126,8 @@ $newClass.click(function() {
         function addSecondClass(result) {
             var newItem = '<li class="second-class" pk="'+result+'">'
                         +'<i class="fa fa fa-file-o" aria-hidden="true"></i>'+'\n'
-                        +'<span>' + value + '</span>'+'<span>(0)</span>'
+                        +'<span>' + value + '</span>'
+                        +'<span class="todo-count">(0)</span>'
                         +'<i class="fa fa-times delete hide" aria-hidden="true"></i>'
                         +'</li>';
             // 判断是否存在唯一ul子元素
@@ -95,7 +135,8 @@ $newClass.click(function() {
                 var newSubling = $('<ul class="second-class-wrap"></ul>');
                 newSubling.append(newItem);
                 $currentClass.after(newSubling);
-            } else if($currentClass.next().is("ul")) {
+            } 
+            else if ($currentClass.next().is("ul")) {
                 $currentClass.next().append(newItem);
             }
             hideMask();
@@ -103,10 +144,11 @@ $newClass.click(function() {
         function addTopClass(result) {
             var newItem = '<li class="top-class" pk="'+result+'">'
              +'<i class="fa fa-folder-open" aria-hidden="true"></i>'+'\n'
-             +'<span>' + value + '</span>'+'<span>(0)</span>'
+             +'<span>' + value + '</span>'
+             +'<span class="todo-count">(0)</span>'
              +'<i class="fa fa-times delete hide" aria-hidden="true"></i>'
              +'</li>';
-            $currentClass.prepend(newItem);
+            $currentClass.prepend(newItem);s
             hideMask();
         }
         if (idName == "class-list") {
@@ -145,13 +187,7 @@ $newClass.click(function() {
     }
 })
 
-$("#add-class").click(function() {
-    event.stopPropagation();
-    $newClass.removeClass("hide");
-    $mask.removeClass("hide");
-})
-
-// 显示删除按钮
+// 显示以及移除删除按钮
 $classList.delegate("li", "mouseover", function() {
     var $del = $(this).find(".delete");
     $del.removeClass("hide");
@@ -163,17 +199,17 @@ $classList.delegate("li", "mouseout", function() {
 })
 
 // 清除类别中高亮状态
-function clearHl() {
+function clearClassHl() {
     var $item = $classList.find("li");
     $item.css("background-color", "#f2f2f2");
 }
 
 $("body").click(function() {
-    clearHl();
+    clearClassHl();
     $currentClass = $classList;
 })
 
-// 删除类别
+// 点击删除按钮删除类
 function deleteClass(event)  {
     event.stopPropagation();
     var $target = $(event.target);
@@ -218,6 +254,46 @@ function deleteClass(event)  {
     }
 }
 
+function getTasks(classType, classid, contentType) {
+    var type = classType?classType+"/":"task/";
+        id = classid?classid+"/":"";
+        cType = contentType?contentType+"/":"";
+
+    var result  = {
+        url: "http://127.0.0.1:8000/gtd/"+type+id+cType,
+        type: "GET",
+        success: function(result) {
+            var handleList = "";
+            $.each(result, function(date, tasks){
+                handleList = handleList + '<li class="date">' + date + '</li>'
+                for (var task of tasks) {
+                    var head;
+                    if (task[2]) {
+                        head = '<li class="title" pk="'
+                            + task[1]
+                            + '"style="color: #32cd32">'
+                    } 
+                    else {
+                        head = '<li class="title" pk="'+ task[1]+ '">'
+                    }
+                    handleList = handleList
+                        + head
+                        + task[0]
+                        + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
+                        + '</li>';
+                }
+            });
+            $taskList.html(handleList);
+            clearContent();
+        },
+        error: function() {
+            alert("显示失败");
+        }
+    }
+    return result;
+}
+
+// 获取当前类的task项目
 function getClassTasks(event) {
     event.stopPropagation();
     var $target = $(event.target);
@@ -226,49 +302,17 @@ function getClassTasks(event) {
     }
     $mainTarget = $target.is("li")?$target:$target.parent();
     if ($mainTarget.is("li")) {
-        clearHl();
+        clearClassHl();
         $mainTarget.css("background-color", "#fff");
         $currentClass = $mainTarget;
         var classType = $currentClass.attr("class"),
             classid = $currentClass.attr("pk");
         // Change "top-class" into "topclass" 
         classType = classType.split("-").join("");
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/"+classType+"/"+classid +"/"+"all/",
-            type: "GET",
-            success: function(result) {
-                var content = "";
-                $.each(result, function(date, tasks){
-                    content = content + '<li class="date">' + date + '</li>'
-                    for (var task of tasks) {
-                        var head;
-                        if (task[2]) {
-                            head = '<li class="title" pk="'+ task[1]+ '"style="color: #32cd32">'
-                        } 
-                        else {
-                            head = '<li class="title" pk="'+ task[1]+ '">'
-                        }
-                        content = content + head
-                            + task[0]
-                            + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
-                            + '</li>';
-                    }
-                });
-                $taskList.html(content);
-                $caption.text("");
-                $date.text("");
-                $something.text("");
-            },
-            error: function() {
-                alert("显示失败");
-            }
-        })
+        $.ajax(getTasks(classType, classid, "all"))
     }
 }
 
-// Jquery代理由于设计方式无法实现此功能
-// 采用原生代理
-var classList = $classList[0];
 classList.addEventListener("click", deleteClass, false);
 classList.addEventListener("click", getClassTasks, false);
 
@@ -279,94 +323,71 @@ function getCurrentTasksWithStatus(status) {
         classid = $currentClass.attr("pk");
     // Change "top-class" into "topclass" 
     classType = classType.split("-").join("");
-    $.ajax({
-        url: "http://127.0.0.1:8000/gtd/"+classType+"/"+classid +"/"+status+"/",
-        type: "GET",
-        success: function(result) {
-            var content = "";
-            $.each(result, function(date, tasks){
-                content = content + '<li class="date">' + date + '</li>'
-                for (var task of tasks) {
-                    var head;
-                    if (task[2]) {
-                        head = '<li class="title" pk="' + task[1]+ '" style="color: #32cd32">'
-                    } 
-                    else {
-                        head = '<li class="title" pk="' + task[1] +'">'
-                    }
-                    content = content + head
-                        + task[0]
-                        + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
-                        + '</li>';
-                }
-            });
-            $taskList.html(content);
-        },
-        error: function() {
-            alert("显示失败");
-        }
-    })
+    $.ajax(getTasks(classType, classid, status))
 }
 
 function clearStatusHl() {
     $(".status li").removeClass("select");
 }
 
+// 所有
 $("#all").click(function() {
     event.stopPropagation();
     if ($currentClass === $classList) {
-        $("#default").trigger("click");
-        clearHl();
-        $("#default").css("background-color", "#fff")
+        $.ajax(getTasks("", "", "all"))
+        clearClassHl();
     } 
     else {
-        $currentClass.trigger("click");
+        getCurrentTasksWithStatus("all");
     }
     clearStatusHl();
     $(this).addClass("select");
 })
 
+// 未完成
 $("#todo").click(function() {
     event.stopPropagation();
     if ($currentClass === $classList) {
-        $currentClass = $("#default");
-        $currentClass.css("background-color", "#fff");
-    } 
-    getCurrentTasksWithStatus("todo");
+        $.ajax(getTasks("", "", "todo"))
+        clearClassHl();
+    }
+    else {
+        getCurrentTasksWithStatus("todo");
+    }
     clearStatusHl();
     $(this).addClass("select");
 })
 
+// 已完成
 $("#finish").click(function() {
     event.stopPropagation();
     if ($currentClass === $classList) {
-        $currentClass = $("#default");
-        $currentClass.css("background-color", "#fff");
-    } 
-    getCurrentTasksWithStatus("finish");
+        $.ajax(getTasks("", "", "finish"))
+        clearClassHl();
+    }
+    else {
+        getCurrentTasksWithStatus("finish");
+    }
     clearStatusHl();
     $(this).addClass("select");
 })
 
-var $taskList = $("#tasks");
-
-$taskList.delegate("li.title", "mouseover", function() {
+$taskList.delegate(".title", "mouseover", function() {
     var $del = $(this).find(".delete");
     $del.removeClass("hide");
 })
 
-$taskList.delegate("li.title", "mouseout", function() {
+$taskList.delegate(".title", "mouseout", function() {
     var $del = $(this).find('.delete');
     $del.addClass("hide");
 })
 
 function clearHandelHl() {
-    var $item = $taskList.find("li.title");
+    var $item = $taskList.find(".title");
     $item.css("background-color", "#fff");
 }
 
-var $currentTask = null;
-
+// 删除任务
 function deleteTask(event) {
     event.stopPropagation();
     var $target = $(event.target);
@@ -393,7 +414,8 @@ function deleteTask(event) {
     }
 }
 
-function getTask(event) {
+// 获取任务
+function getContent(event) {
     event.stopPropagation();
     var $target = $(event.target);
     if ($target.is("li.title")) {
@@ -407,11 +429,15 @@ function getTask(event) {
             },            
             success: function(result) {
                 clearHandelHl();
+                // 显示编辑按钮
+                $done.css("display", "inline-block");
+                $edit.css("display", "inline-block");
+
                 $that.css("background-color", "#f2f2f2")
                 $caption.text(result.title);
                 $date.text("截止日期:"+result.date);
                 $something.text(result.content);
-                result.status?$("#done").addClass("hide"):$("#done").removeClass("hide");
+                result.status?$done.addClass("hide"):$done.removeClass("hide");
                 $currentTask = $target;
             },
             error: function() {
@@ -421,20 +447,10 @@ function getTask(event) {
     }
 }
 
-// Jquery代理由于设计方式无法实现此功能
-// 采用原生代理
-var taskList = $taskList[0];
 taskList.addEventListener("click", deleteTask, false);
-taskList.addEventListener("click", getTask, false);
-
+taskList.addEventListener("click", getContent, false);
 
 // 任务部分
-var $content = $(".content"),
-    $caption = $content.find(".caption"),
-    $date = $content.find(".date"),
-    $something = $content.find(".something"),
-    old_content;
-
 function editStatus() {
     // Caption part
     $caption.replaceClass("caption", "edit-caption");
@@ -465,7 +481,7 @@ function showStatus() {
     $(".footer-confirm").addClass("hide");    
 }
 
-// 新增内容
+// 点击新增任务按钮
 $("#add-task").click(function() {
     event.stopPropagation();
     clearHandelHl();
@@ -477,11 +493,32 @@ $("#add-task").click(function() {
     editStatus();  
 })
 
-// 编辑任务
-$("#edit").click(function() {
+// 点击编辑任务按钮
+$edit.click(function() {
     event.stopPropagation();
     old_content = [$caption.text(), $date.text(), $something.text()];
     editStatus();
+})
+
+// 标记状态完成
+$done.click(function() {
+    event.stopPropagation();
+    var taskid = $currentTask.attr("pk"),
+        $that = $(this);
+    $.ajax({
+        url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
+        type: "PUT",
+        headers: {
+            "X-CSRFTOKEN": getCookie("csrftoken")
+        },          
+        success: function() {
+            $currentTask.css("color", "#32cd32");
+            $that.addClass("hide");
+        },
+        error: function() {
+            alert("修改状态失败");
+        }
+    })
 })
 
 function submitTasksModifyHandle(pk) {
@@ -499,7 +536,9 @@ function submitTasksModifyHandle(pk) {
                 for (var task of tasks) {
                     var head;
                     if (task[2]) {
-                        head = '<li class="title" pk="' + task[1]+ '" style="color: #32cd32">'
+                        head = '<li class="title" pk="' 
+                            + task[1] 
+                            + '" style="color: #32cd32">'
                     } 
                     else {
                         head = '<li class="title" pk="' + task[1] +'">'
@@ -525,6 +564,30 @@ function submitTasksModifyHandle(pk) {
     })
 }
 
+// 重新计算并在catalogry处显示未完成时间数
+function addTodoCount(classType, classid) {
+    function addOne($item) {
+        var count = $item.text().slice(1, -1);
+        var newCount = parseInt(count) + 1;
+        $item.text("("+newCount+")")
+    }
+    if (classType == "top-class") {
+        var $top = $(".top-class[pk="+classid+"]").find(".todo-count");
+        addOne($top);
+    }
+    else if (classType == "second-class") {
+        var $secondItem = $(".second-class[pk="+classid+"]");
+        var $second = $secondItem.find(".todo-count");
+        var $top = $secondItem.parent().prev().find(".todo-count");
+        addOne($top);
+        addOne($second);
+    }
+    // 任务列表
+    var $total = $(".header .todo-count");
+    addOne($total);
+}
+
+// 确认修改并提交
 $("#edit-confirm").click(function() {
     event.stopPropagation();
     var caption = $caption.text(),
@@ -554,8 +617,10 @@ $("#edit-confirm").click(function() {
         },
         success: function(pk) {
             submitTasksModifyHandle(pk);
+            addTodoCount(classType, classid);
             clearStatusHl();
             $("#all").addClass("select");
+
         },
         error: function(xhr) {
             alert(xhr.responseText + "添加失败，请重试");
@@ -565,6 +630,7 @@ $("#edit-confirm").click(function() {
     showStatus();
 })
 
+// 取消修改还原原内容
 $("#edit-cancel").click(function() {
     event.stopPropagation();
     $caption.text(old_content[0]);
@@ -573,28 +639,7 @@ $("#edit-cancel").click(function() {
     showStatus();
 })
 
-// 修改时间状态为完成
-$("#done").click(function() {
-    event.stopPropagation();
-    var taskid = $currentTask.attr("pk"),
-        $that = $(this);
-    $.ajax({
-        url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
-        type: "PUT",
-        headers: {
-            "X-CSRFTOKEN": getCookie("csrftoken")
-        },          
-        success: function() {
-            $currentTask.css("color", "#32cd32");
-            $that.addClass("hide");
-        },
-        error: function() {
-            alert("修改状态失败");
-        }
-    })
-})
-
-// 防止编辑状态修改current_class
+// 防止点击编辑状态的content,修改currentclass
 $(".caption").click(function() {
     if ($(this).attr("contenteditable")) {
         event.stopPropagation()
@@ -612,3 +657,12 @@ $(".something").click(function() {
         event.stopPropagation()
     }
 })
+
+// 清除content区域中的内容和编辑图表
+function clearContent() {
+    $caption.text("");
+    $date.text("");
+    $something.text("");
+    $done.css("display", "none");
+    $edit.css("display", "none");
+}

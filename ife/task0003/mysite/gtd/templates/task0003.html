@@ -12,13 +12,17 @@
         </div>
         <div class="container">
             <div class="category">
-                <p class="header">所有任务</p>
+                <p class="header">
+                    <span>所有任务<span>
+                    <span class="todo-count">({{ all_todo_num }})</span>
+                </p>
                 <p class="header">分类列表</p>
                 <ul id="class-list" class="class-list">
                 {% for top_item in top_class_list %}
                     <li class="top-class" pk="{{ top_item.pk }}">
                         <i class="fa fa-folder-open" aria-hidden="true"></i>
                         <span>{{ top_item.name }}</span>
+                        <span class="todo-count">({{ top_item.todo_num}})</span>
                         <i class="fa fa-times delete hide" aria-hidden="true"></i>
                     </li>
                     {% if top_item.secondclass_set %}
@@ -27,7 +31,8 @@
                         <li class="second-class" pk="{{ sec_item.pk }}">
                             <i class="fa fa fa-file-o" aria-hidden="true"></i>
                             <span>{{ sec_item.name }}</span>
-                            <i class="fa fa-times dlete hide" aria-hidden="true"></i>
+                            <span class="todo-count">({{ sec_item.todo_num }})</span>
+                            <i class="fa fa-times delete hide" aria-hidden="true"></i>
                         </li>
                     {% endfor %}
                     </ul>
@@ -36,6 +41,7 @@
                     <li id="default" class="top-class" pk="1">
                         <i class="fa fa-folder-open" aria-hidden="true"></i>
                         <span>默认分类</span>
+                        <span class="todo-count">({{default.todo_num}})</span>
                     </li>
                 </ul>
             </div>
@@ -46,21 +52,7 @@
                     <li id="finish">已完成</li>
                 </ul>
                 <div class="item">
-                    <ul id="tasks">
-                        {% for date, tasks in default_task.items %}
-                        <li class="date">{{ date }}</li>
-                            {% for caption, id, status in tasks %}
-                                {% if status %}
-                                    <li class="title" pk="{{ id }}" style="color: #32cd32">
-                                {% else %}
-                                    <li class="title" pk="{{ id }}">
-                                {% endif %}
-                            {{ caption }}
-                            <i class="fa fa-times hide delete" aria-hidden="true"></i>
-                            </li>
-                            {% endfor %}
-                        {% endfor %}
-                    </ul>
+                    <ul id="tasks"></ul>
                 </div>
             </div>
             <div class="content">

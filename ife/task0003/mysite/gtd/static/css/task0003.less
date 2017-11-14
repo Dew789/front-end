@@ -114,7 +114,7 @@ body {
 }
 
 /* 
- *新建类产生新窗口和遮罩
+ *新建面板，遮罩和删除面板
  */
 .mask {
     position: absolute;
@@ -131,7 +131,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -150px;
+    margin-top: -75px;
     margin-left: -125px;
     width: 250px;
     height: 150px;
@@ -144,6 +144,35 @@ body {
     }
     input {
     margin-bottom: 10px;
+    }
+}
+
+.deletePannel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -90px;
+    margin-left: -125px;
+    width: 250px;
+    height: 180px;
+    background-color: #fff;
+    box-shadow: 0 0 5px #000;
+    .move-area {
+        height: 40px;
+        border-bottom: @border-style;
+        line-height: 40px;
+        text-indent: 1em;
+        cursor: move;
+    }
+    .message {
+        height: 100px;
+        border-bottom: @border-style;
+        line-height: 100px;
+        text-align: center;
+    }
+    div {
+        padding-top: 10px;
+        text-align: center;
     }
 }
 
@@ -216,6 +245,11 @@ body {
 /*
  *content内容部分
  */
+ #edit,
+ #done {
+    display: none;
+ }
+
 .captionStyle(@fontSize) {
     margin-top: -90px;
     height: 60px;
@@ -235,7 +269,7 @@ body {
     border-bottom: @border-style;
 }
 
-.dateStyle {
+.dateStyle() {
     height: 30px;
     line-height: 30px;
     font-size: 14px;
@@ -243,12 +277,12 @@ body {
 }
 
 .date {
-    .dateStyle;
+    .dateStyle();
     background-color: #ffffe0;
 }
 
 .edit-date {
-    .dateStyle;
+    .dateStyle();
     border: none;
     border-bottom: @border-style;
 }
@@ -293,10 +327,6 @@ body {
     line-height: 40px;
     text-indent: 1em;
     background-color: @bg-color;
-    span {
-        margin-right: 50px;
-        cursor: pointer;
-    }
 }
 
 .footer-confirm {
@@ -306,6 +336,10 @@ body {
     line-height: 40px;
     text-align: center;
     background-color: @bg-color;
+    span {
+        margin-right: 50px;
+        cursor: pointer;
+    }
 }
 
 /*新建分类与任务按钮*/
