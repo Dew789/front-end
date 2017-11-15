@@ -24,6 +24,20 @@ jQuery.fn.extend({
     }
 });
 
+var $classList = $("#class-list"),
+    classList = $classList[0],
+    $taskList = $("#tasks"),
+    taskList = $taskList[0],
+    $currentClass = $classList,
+    $currentTask = null,
+    $content = $(".content"),
+    $caption = $content.find(".caption"),
+    $date = $content.find(".date"),
+    $something = $content.find(".something"),
+    $edit = $("#edit"),
+    $done = $("#done"),
+    old_content;
+
 // 创建遮罩
 var createMask = singleton(function() {
     var $html = $('<div class="mask hide"></div>');
@@ -48,71 +62,43 @@ var createClassPannel = singleton(function() {
     return $html;
 });
 
-// 创建删除面板
-var createDeletePannel = singleton(function() {
-    var html = [
-        '<div class="deletePannel">',
-            '<p class="move-area">删除</p>',
-            '<p class="message">确认删除？</p>',
-            '<div>',
-                '<span class="btn" name="confirm">确认</span>',
-                '<span class="btn" name="cancel">取消</span>',
-            '</div>',
-        '</div>'
-    ];
-    var $html = $(html.join(""));
-    $("body").append($html);
-    return $html;
-});
-
-var $mask = createMask(),
-    $addClassPanel = createClassPannel(),
-    $inputName = $addClassPanel.find("input"),
-    $deletePannel = createDeletePannel(),
-    $classList = $("#class-list"),
-    classList = $classList[0],
-    $taskList = $("#tasks"),
-    taskList = $taskList[0],
-    $currentClass = $classList,
-    $currentTask = null,
-    $content = $(".content"),
-    $caption = $content.find(".caption"),
-    $date = $content.find(".date"),
-    $something = $content.find(".something"),
-    $edit = $("#edit"),
-    $done = $("#done"),
-    old_content;
-
-function hideMask() {
-    $addClassPanel.addClass("hide");
-    $mask.addClass("hide");
-    $inputName.val("");
-}
-
-// 隐藏遮罩
-$mask.click(function() {
-    hideMask();
-})
-
-$inputName.focus(function() {
-    $inputName.val("");
-})
-
 // 触发遮罩以及添加面板
 $("#add-class").click(function() {
     event.stopPropagation();
+    var $mask = createMask(),
+        $addClassPanel = createClassPannel(),
+        $inputName = $addClassPanel.find("input");
+
     $addClassPanel.removeClass("hide");
     $mask.removeClass("hide");
-})
 
-// 添加新分类
-$addClassPanel.click(function() {
-    event.stopPropagation();
-    var name = $(event.target).attr("name");
-    if (name == "cancel") {
-        hideMask();
+    function hideMask() {
+        $addClassPanel.addClass("hide");
+        $mask.addClass("hide");
+        $inputName.val("");
+        $mask.unbind();
+        $inputName.unbind();
+        $addClassPanel.unbind();
     }
-    else if (name == "confirm") {
+
+    // 隐藏遮罩
+    $mask.click(function() {
+        hideMask();
+    })
+    
+    // 清空输入文本
+    $inputName.focus(function() {
+        $inputName.val("");
+    })
+
+    // 添加新分类
+    $addClassPanel.click(function() {
+        event.stopPropagation();
+        var name = $(event.target).attr("name");
+        if (name == "cancel") {
+            hideMask();
+        }
+        else if (name == "confirm") {
         var value = $.trim($inputName.val());
         if (!value) {
             alert("输入不能为空");
@@ -124,12 +110,13 @@ $addClassPanel.click(function() {
         }
         var idName = $currentClass.attr("class");
         function addSecondClass(result) {
-            var newItem = '<li class="second-class" pk="'+result+'">'
-                        +'<i class="fa fa fa-file-o" aria-hidden="true"></i>'+'\n'
-                        +'<span>' + value + '</span>'
-                        +'<span class="todo-count">(0)</span>'
-                        +'<i class="fa fa-times delete hide" aria-hidden="true"></i>'
-                        +'</li>';
+            var newItem = ''
+                + '<li class="second-class" pk="'+result+'">'
+                +     '<i class="fa fa fa-file-o" aria-hidden="true"></i>'+'\n'
+                +     '<span>' + value + '</span>'
+                +     '<span class="todo-count">(0)</span>'
+                +     '<i class="fa fa-times delete hide" aria-hidden="true"></i>'
+                + '</li>';
             // 判断是否存在唯一ul子元素
             if ($currentClass.next().is("li") || !$currentClass.next().html()) {
                 var newSubling = $('<ul class="second-class-wrap"></ul>');
@@ -142,13 +129,14 @@ $addClassPanel.click(function() {
             hideMask();
         }
         function addTopClass(result) {
-            var newItem = '<li class="top-class" pk="'+result+'">'
-             +'<i class="fa fa-folder-open" aria-hidden="true"></i>'+'\n'
-             +'<span>' + value + '</span>'
-             +'<span class="todo-count">(0)</span>'
-             +'<i class="fa fa-times delete hide" aria-hidden="true"></i>'
-             +'</li>';
-            $currentClass.prepend(newItem);s
+            var newItem = ''
+             + '<li class="top-class" pk="'+result+'">'
+             +     '<i class="fa fa-folder-open" aria-hidden="true"></i>'+'\n'
+             +     '<span>' + value + '</span>'
+             +     '<span class="todo-count">(0)</span>'
+             +     '<i class="fa fa-times delete hide" aria-hidden="true"></i>'
+             + '</li>';
+            $currentClass.prepend(newItem);
             hideMask();
         }
         if (idName == "class-list") {
@@ -184,8 +172,87 @@ $addClassPanel.click(function() {
                 }
             })            
         }
-    }
+        }
+    })
 })
+
+// 创建删除面板
+var createDeletePannel = singleton(function() {
+    var html = [
+        '<div class="deletePannel">',
+            '<p class="move-area">删除</p>',
+            '<p class="message">确认删除？</p>',
+            '<div>',
+                '<span class="btn" name="confirm">确认</span>',
+                '<span class="btn" name="cancel">取消</span>',
+            '</div>',
+        '</div>'
+    ];
+    var $html = $(html.join(""));
+    $("body").append($html);
+    return $html;
+});
+
+// 显示删除面板
+function showDeletePannel(deleteFn) {
+    var $deletePannel = createDeletePannel(),
+        $moveArea = $deletePannel.find('.move-area'),
+        $confirm = $deletePannel.find('.btn[name=confirm]'),
+        $cancel = $deletePannel.find('.btn[name=cancel]');
+    $deletePannel.removeClass("hide");
+
+    $moveArea.mousedown(function(event) {
+        // 光标按下时光标和面板之间的距离
+        var disX = event.pageX - $deletePannel.offset().left,
+            disY = event.pageY - $deletePannel.offset().top;
+        // 移动
+        $(document).mousemove(function(event) {
+            fnMove(event, disX, disY);
+        })
+        // 释放鼠标
+        $(document).mouseup(function() {
+            $(document).unbind("mousemove");
+            $(document).unbind("mouseup");
+        })
+    })
+    function fnMove(e, posX, posY){
+        var l = e.pageX - posX,
+            t = e.pageY - posY,
+            winW = document.documentElement.scrollWidth || document.body.scrollWidth,
+            winH = document.documentElement.scrollHeight || document.body.scrollHeight,
+            maxW = winW - $deletePannel.outerWidth(),
+            maxH = winH - $deletePannel.outerHeight();
+        if (l < 0) {
+            l = 0;
+        }
+        else if (l > maxW) {
+            l = maxW;
+        }
+        if ( t < 0 ) {
+            t = 0;
+        }
+        else if(t > maxH){
+          t = maxH;
+        }
+        $deletePannel.css("left", l+"px");
+        $deletePannel.css("top", t+"px");
+    }
+    function reset() {
+        $moveArea.unbind("mousedown");
+        $deletePannel.addClass("hide");
+        $confirm.unbind();
+        $cancel.unbind();
+        $deletePannel.css("left", "530px");
+        $deletePannel.css("top", "250px");
+    }
+    $confirm.click(function() {
+        deleteFn();
+        reset();
+    });
+    $cancel.click(function() {
+        reset();
+    })
+}
 
 // 显示以及移除删除按钮
 $classList.delegate("li", "mouseover", function() {
@@ -219,37 +286,43 @@ function deleteClass(event)  {
             idName = $classItem.attr("class");
 
         if (idName == "top-class") {
-            $.ajax({
-                url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
-                type: "DELETE",
-                headers: {
-                    "X-CSRFTOKEN": getCookie("csrftoken")
-                },            
-                success: function() {
-                    if ($classItem.next().is("ul")) {
-                        $classItem.next().remove();
-                    }                
-                    $classItem.remove();
-                },
-                error: function() {
-                    alert("删除失败");
-                }
-            })
+            function delTopClass() {
+                $.ajax({
+                    url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
+                    type: "DELETE",
+                    headers: {
+                        "X-CSRFTOKEN": getCookie("csrftoken")
+                    },            
+                    success: function() {
+                        if ($classItem.next().is("ul")) {
+                            $classItem.next().remove();
+                        }                
+                        $classItem.remove();
+                    },
+                    error: function() {
+                        alert("删除失败");
+                    }
+                })
+            }
+            showDeletePannel(delTopClass);
         }
         else if (idName == "second-class") {
-            $.ajax({
-                url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
-                type: "DELETE",
-                headers: {
-                    "X-CSRFTOKEN": getCookie("csrftoken")
-                },            
-                success: function() {
-                    $classItem.remove();
-                },
-                error: function() {
-                    alert("删除失败");
-                }
-            })            
+            function delSecClass() {
+                $.ajax({
+                    url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
+                    type: "DELETE",
+                    headers: {
+                        "X-CSRFTOKEN": getCookie("csrftoken")
+                    },            
+                    success: function() {
+                        $classItem.remove();
+                    },
+                    error: function() {
+                        alert("删除失败");
+                    }
+                })
+            }     
+            showDeletePannel(delSecClass);  
         }
     }
 }
@@ -394,23 +467,26 @@ function deleteTask(event) {
     if ($target.is(".delete")) {
         var $taskItem = $target.parent();
             taskid = $taskItem.attr("pk"),
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
-            type: "DELETE",
-            headers: {
-                "X-CSRFTOKEN": getCookie("csrftoken")
-            },            
-            success: function() {
-                if (($taskItem.next().is(".date") || !$taskItem.next().html())
-                    && $taskItem.prev().is(".date")) {
-                    $taskItem.prev().remove();
+        function delTask() {
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
+                type: "DELETE",
+                headers: {
+                    "X-CSRFTOKEN": getCookie("csrftoken")
+                },            
+                success: function() {
+                    if (($taskItem.next().is(".date") || !$taskItem.next().html())
+                        && $taskItem.prev().is(".date")) {
+                        $taskItem.prev().remove();
+                    }
+                    $taskItem.remove();
+                },
+                error: function() {
+                    alert("删除失败");
                 }
-                $taskItem.remove();
-            },
-            error: function() {
-                alert("删除失败");
-            }
-        })
+            })
+        }
+        showDeletePannel(delTask);
     }
 }
 
