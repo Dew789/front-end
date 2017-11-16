@@ -6,7 +6,9 @@ require.config({
     }
 });
 
-require(["jquery", "app/current", "app/task", "app/category"], function($, current, task, category) {
+require(["jquery", "app/current", "app/category"], function($, current, category) {
+    var $classList = $("#class-list");
+
     $("body").click(function() {
         category.clearClassHl();
         current.$class = $classList;
