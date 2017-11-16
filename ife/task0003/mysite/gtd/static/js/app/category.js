@@ -1,15 +1,17 @@
-define(function(require) {
+define(function(require, exports) {
     var $ = require("jquery"),
         utils = require("utils"),
-        current = require("app/current"),
+        widget = require("widget"),
+        handle = require("app/handle"),
         task = require("app/task"),
-        widget = require("widget");
+        category = require("app/category"),
+        current = require("app/current");
 
     var $classList = $("#class-list"),
         classList = $classList[0],
         $taskList = $("#tasks");
 
-        // 触发遮罩以及添加面板
+    // 触发遮罩以及添加面板
     $("#add-class").click(function() {
         event.stopPropagation();
         var $mask = widget.createMask(),
@@ -203,19 +205,19 @@ define(function(require) {
                     var handleList = "";
                     $.each(result, function(date, tasks){
                         handleList = handleList + '<li class="date">' + date + '</li>'
-                        for (var task of tasks) {
+                        for (var item of tasks) {
                             var head;
-                            if (task[2]) {
+                            if (item[2]) {
                                 head = '<li class="title" pk="'
-                                    + task[1]
+                                    + item[1]
                                     + '"style="color: #32cd32">'
                             } 
                             else {
-                                head = '<li class="title" pk="'+ task[1]+ '">'
+                                head = '<li class="title" pk="'+ item[1]+ '">'
                             }
                             handleList = handleList
                                 + head
-                                + task[0]
+                                + item[0]
                                 + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
                                 + '</li>';
                         }
@@ -253,8 +255,6 @@ define(function(require) {
     classList.addEventListener("click", deleteClass, false);
     classList.addEventListener("click", getClassTasks, false);
 
-    return {
-        clearClassHl: clearClassHl,
-        getTasks: getTasks
-    }
+    exports.clearClassHl = clearClassHl;
+    exports.getTasks = getTasks;
 });

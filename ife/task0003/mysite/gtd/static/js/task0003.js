@@ -1,16 +1,17 @@
 require.config({
-    baseUrl: "../static/js/lib/",
+    baseUrl: "../static/js/lib",
 
     paths: {
-        app: '../app/'
+        app: '../app'
     }
 });
 
-require(["jquery", "app/current", "app/category"], function($, current, category) {
-    var $classList = $("#class-list");
-
-    $("body").click(function() {
-        category.clearClassHl();
-        current.$class = $classList;
-    })
-})
+require(["jquery", "app/current", "app/category", "app/handle", "app/task"],
+    function($, current, category) {
+        var $classList = $("#class-list");
+        $("body").click(function() {
+            category.clearClassHl();
+            current.$class = $classList;
+        })
+    }
+)

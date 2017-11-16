@@ -1,13 +1,11 @@
-define(
-    function(require) {
-        var $ = require("jquery");
+define(function(require) {
+    var $ = require("jquery");
 
-        var $class = $("#class-list"),
-            $task = null;
+    var $class = $("#class-list"),
+        $task = null;
 
-        return {
-            $class: $class,
-            $task: $task
-        }
+    return {
+        $class: $class,
+        $task: $task
     }
-)
+})

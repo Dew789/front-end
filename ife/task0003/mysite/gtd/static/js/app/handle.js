@@ -1,11 +1,18 @@
-define(function(require) {
+define(function(require, exports) {
     var $ = require("jquery"),
         utils = require("utils"),
-        current = require("app/current"),
+        widget = require("widget"),
         task = require("app/task"),
-        widget = require("widget");
+        category = require("app/category"),
+        current = require("app/current");
 
-    var $classList = $("#class-list"),
+    var $content = $(".content"),
+        $caption = $content.find(".caption"),
+        $date = $content.find(".date"),
+        $something = $content.find(".something"),
+        $edit = $("#edit"),
+        $done = $("#done"),
+        $classList = $("#class-list"),
         classList = $classList[0],
         $taskList = $("#tasks"),
         taskList = $taskList[0];
@@ -24,7 +31,7 @@ define(function(require) {
         $.ajax(category.getTasks(classType, classid, status))
     }
 
-    function clearStatusHl() {
+    function clearStatusHl(){
         $(".status li").removeClass("select");
     }
 
@@ -145,9 +152,7 @@ define(function(require) {
     }
     
     taskList.addEventListener("click", deleteTask, false);
-    taskList.addEventListener("click", getContent, false);    
+    taskList.addEventListener("click", getContent, false);
 
-    return {
-        clearHandelHl: clearHandelHl;
-    };
+    exports.clearHandelHl = clearHandelHl
 });

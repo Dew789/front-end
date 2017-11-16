@@ -1,5 +1,10 @@
-define(function(require) {
-    var $ = require("jquery");
+define(function(require, exports) {
+    var $ = require("jquery"),
+        utils = require("utils"),
+        widget = require("widget"),
+        handle = require("app/handle"),
+        category = require("app/category"),
+        current = require("app/current");
 
     var $content = $(".content"),
         $caption = $content.find(".caption"),
@@ -7,6 +12,7 @@ define(function(require) {
         $something = $content.find(".something"),
         $edit = $("#edit"),
         $done = $("#done"),
+        $classList = $("#class-list"),
         old_content;
 
     // 防止点击编辑状态的content,修改currentclass
@@ -128,7 +134,7 @@ define(function(require) {
             classType = current.$class.attr("class"),
             classid = current.$class.attr("pk");
 
-        if (current.$class == $classList) {
+        if (current.$class[0] == $classList[0]) {
             current.$class = $("#default");
             classType = "top-class"
             classid = 1;
@@ -163,15 +169,15 @@ define(function(require) {
     // 点击编辑任务按钮
     $edit.click(function() {
         event.stopPropagation();
-        task.old_content = [$caption.text(), $date.text(), $something.text()];
-        task.editStatus();
+        old_content = [$caption.text(), $date.text(), $something.text()];
+        editStatus();
     })
 
     // 标记状态完成
     $done.click(function() {
         event.stopPropagation();
         var taskid = current.$task.attr("pk"),
-            $that = $(this);
+            $that = $(this);    
         $.ajax({
             url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
             type: "PUT",
@@ -200,10 +206,8 @@ define(function(require) {
         editStatus();
     })    
 
-    return {
-        clearContent: clearContent,
-        old_content: old_content,
-        editStatus: editStatus,
-        showStatus: showStatus
-    };
+    exports.clearContent = clearContent;
+    exports.old_content = old_content;
+    exports.editStatus = editStatus;
+    exports.showStatus = showStatus;
 });
