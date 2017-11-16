@@ -56,7 +56,12 @@ define(
                 $confirm = $deletePannel.find('.btn[name=confirm]'),
                 $cancel = $deletePannel.find('.btn[name=cancel]');
             $deletePannel.removeClass("hide");
-        
+
+            // 防止对外界影响
+            $deletePannel.click(function() {
+                event.stopPropagation();
+            })
+
             $moveArea.mousedown(function(event) {
                 // 光标按下时光标和面板之间的距离
                 var disX = event.pageX - $deletePannel.offset().left,
@@ -111,7 +116,6 @@ define(
         }
 
         return {
-            getCookie: getCookie,
             createMask: createMask,
             createClassPannel, createClassPannel,
             showDeletePannel, showDeletePannel
