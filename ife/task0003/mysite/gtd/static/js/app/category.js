@@ -4,7 +4,6 @@ define(function(require, exports) {
         widget = require("widget"),
         handle = require("app/handle"),
         task = require("app/task"),
-        category = require("app/category"),
         current = require("app/current");
 
     var $classList = $("#class-list"),
@@ -142,55 +141,69 @@ define(function(require, exports) {
         $item.css("background-color", "#f2f2f2");
     }
 
+    $(".category").click(function() {
+        clearClassHl();
+        handle.clearHandelContent();
+        $("#all").addClass("select");
+        task.clearContent();
+        task.showStatus();
+        current.$class = $classList;
+    })
+
     // 点击删除按钮删除类
     function deleteClass(event)  {
-            event.stopPropagation();
-            var $target = $(event.target);
-            if ($target.is(".delete")) {
-                var $classItem = $target.parent(),
-                    classid = $classItem.attr("pk"),
-                    idName = $classItem.attr("class");
-        
-                if (idName == "top-class") {
-                    function delTopClass() {
-                        $.ajax({
-                            url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
-                            type: "DELETE",
-                            headers: {
-                                "X-CSRFTOKEN": utils.getCookie("csrftoken")
-                            },            
-                            success: function() {
-                                if ($classItem.next().is("ul")) {
-                                    $classItem.next().remove();
-                                }                
-                                $classItem.remove();
-                            },
-                            error: function() {
-                                alert("删除失败");
-                            }
-                        })
-                    }
-                    widget.showDeletePannel(delTopClass);
+        event.stopPropagation();
+        var $target = $(event.target);
+        if ($target.is(".delete")) {
+            var $classItem = $target.parent(),
+                classid = $classItem.attr("pk"),
+                idName = $classItem.attr("class"),
+                todo_count = $classItem.find(".todo-count").text().slice(1, -1);
+    
+            if (idName == "top-class") {
+                function delTopClass() {
+                    $.ajax({
+                        url: "http://127.0.0.1:8000/gtd/topclass/"+classid+"/",
+                        type: "DELETE",
+                        headers: {
+                            "X-CSRFTOKEN": utils.getCookie("csrftoken")
+                        },            
+                        success: function() {
+                            utils.modifyTodoCount(
+                                "top-class", classid, -parseInt(todo_count));
+                            if ($classItem.next().is("ul")) {
+                                $classItem.next().remove();
+                            }                
+                            $classItem.remove();
+                        },
+                        error: function() {
+                            alert("删除失败");
+                        }
+                    })
                 }
-                else if (idName == "second-class") {
-                    function delSecClass() {
-                        $.ajax({
-                            url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
-                            type: "DELETE",
-                            headers: {
-                                "X-CSRFTOKEN": utils.getCookie("csrftoken")
-                            },            
-                            success: function() {
-                                $classItem.remove();
-                            },
-                            error: function() {
-                                alert("删除失败");
-                            }
-                        })
-                    }
-                    widget.showDeletePannel(delSecClass);  
-                }
+                widget.showDeletePannel(delTopClass);
             }
+            else if (idName == "second-class") {
+                function delSecClass() {
+                    $.ajax({
+                        url: "http://127.0.0.1:8000/gtd/secondclass/"+classid+"/",
+                        type: "DELETE",
+                        headers: {
+                            "X-CSRFTOKEN": utils.getCookie("csrftoken")
+                        },            
+                        success: function() {
+                            utils.modifyTodoCount(
+                                "second-class", classid, -parseInt(todo_count));                            
+                            $classItem.remove();
+                        },
+                        error: function() {
+                            alert("删除失败");
+                        }
+                    })
+                }
+                widget.showDeletePannel(delSecClass);  
+            }
+        }
     }
 
     function getTasks(classType, classid, contentType) {

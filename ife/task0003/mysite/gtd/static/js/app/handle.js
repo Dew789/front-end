@@ -17,11 +17,6 @@ define(function(require, exports) {
         $taskList = $("#tasks"),
         taskList = $taskList[0];
 
-    function clearHandelHl() {
-        var $item = $taskList.find(".title");
-        $item.css("background-color", "#fff");
-    }
-
     // Handle部分
     function getCurrentTasksWithStatus(status) {
         var classType = current.$class.attr("class"),
@@ -29,10 +24,6 @@ define(function(require, exports) {
         // Change "top-class" into "topclass" 
         classType = classType.split("-").join("");
         $.ajax(category.getTasks(classType, classid, status))
-    }
-
-    function clearStatusHl(){
-        $(".status li").removeClass("select");
     }
 
     // 所有
@@ -101,13 +92,20 @@ define(function(require, exports) {
                     headers: {
                         "X-CSRFTOKEN": utils.getCookie("csrftoken")
                     },
-                    success: function() {
+                    success: function(result) {
+                        // 如果删除的task是右侧显示task删除右侧内容
+                        if ($taskItem[0] === current.$task[0]) {
+                            task.clearContent();
+                            task.showStatus();
+                        }
                         if (($taskItem.next().is(".date") || !$taskItem.next().html())
                             && $taskItem.prev().is(".date")) {
                             $taskItem.prev().remove();
                         }
                         $taskItem.remove();
-                        // modifyTodoCount();
+                        // 重新计算category部分计数
+                        utils.modifyTodoCount(
+                            result.class_type, result.class_id, -1);
                     },
                     error: function() {
                         alert("删除失败");
@@ -150,9 +148,25 @@ define(function(require, exports) {
             })
         }
     }
-    
     taskList.addEventListener("click", deleteTask, false);
     taskList.addEventListener("click", getContent, false);
 
-    exports.clearHandelHl = clearHandelHl
+    function clearHandelHl() {
+        var $item = $taskList.find(".title");
+        $item.css("background-color", "#fff");
+    }
+
+    function clearStatusHl() {
+        $(".status li").removeClass("select");
+    }
+
+    function clearHandelContent() {
+        clearStatusHl();
+        $("#all").addClass("select");
+        $taskList.html("");
+    }
+
+    exports.clearHandelHl = clearHandelHl;
+    exports.clearStatusHl = clearStatusHl;
+    exports.clearHandelContent = clearHandelContent;
 });

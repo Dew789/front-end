@@ -13,6 +13,7 @@ define(function(require, exports) {
         $edit = $("#edit"),
         $done = $("#done"),
         $classList = $("#class-list"),
+        $taskList = $("#tasks"),
         old_content;
 
     // 防止点击编辑状态的content,修改currentclass
@@ -139,7 +140,6 @@ define(function(require, exports) {
             classType = "top-class"
             classid = 1;
         }
-
         $.ajax({
             url: "http://127.0.0.1:8000/gtd/task/",
             type: "POST",
@@ -156,8 +156,7 @@ define(function(require, exports) {
             success: function(pk) {
                 submitTasksModifyHandle(pk);
                 utils.modifyTodoCount(classType, classid, 1);
-                clearStatusHl();
-                $("#all").addClass("select");
+                handle.clearStatusHl();
             },
             error: function(xhr) {
                 alert(xhr.responseText + "添加失败，请重试");

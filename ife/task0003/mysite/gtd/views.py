@@ -139,8 +139,19 @@ class TaskItemView(View):
 
     def delete(self ,request, taskid):
         item = Task.objects.get(pk=taskid)
+        if item.top_class:
+            class_item = item.top_class
+        else:
+            class_item = item.second_class
+        class_type = class_item.__class__.__name__
+        class_type = class_type[0:-5].lower() + "-" + "class"
+        t = {
+            "class_type": class_type,
+            "class_id": class_item.pk
+        }
+
         item.delete()
-        return HttpResponse(status=200)
+        return JsonResponse(t)
 
     def get(self ,request, taskid):
         item = Task.objects.get(pk=taskid)
