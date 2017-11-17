@@ -14,6 +14,7 @@ define(function(require, exports) {
         $done = $("#done"),
         $classList = $("#class-list"),
         $taskList = $("#tasks"),
+        addFlag,
         old_content;
 
     // 防止点击编辑状态的content,修改currentclass
@@ -40,8 +41,7 @@ define(function(require, exports) {
         $caption.text("");
         $date.text("");
         $something.text("");
-        $done.css("display", "none");
-        $edit.css("display", "none");
+        $(".modify").addClass("hide");
     }
 
     // 取消修改还原原内容
@@ -118,6 +118,7 @@ define(function(require, exports) {
                     }
                 }
                 handle.clearHandelHl();
+                $("#all").addClass("select");
                 current.$task.css("background-color", "#f2f2f2");
             },
             error: function() {
@@ -140,33 +141,58 @@ define(function(require, exports) {
             classType = "top-class"
             classid = 1;
         }
-        $.ajax({
-            url: "http://127.0.0.1:8000/gtd/task/",
-            type: "POST",
-            data: {
-                caption: caption,
-                duedate: duedate,
-                content: content,
-                classType: classType,
-                classid: classid
-            },
-            headers: {
-                "X-CSRFTOKEN": utils.getCookie("csrftoken")
-            },
-            success: function(pk) {
-                submitTasksModifyHandle(pk);
-                utils.modifyTodoCount(classType, classid, 1);
-                handle.clearStatusHl();
-            },
-            error: function(xhr) {
-                alert(xhr.responseText + "添加失败，请重试");
-            }
-        })
+        if (addFlag) {
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/task/",
+                type: "POST",
+                data: {
+                    caption: caption,
+                    duedate: duedate,
+                    content: content,
+                    classType: classType,
+                    classid: classid
+                },
+                headers: {
+                    "X-CSRFTOKEN": utils.getCookie("csrftoken")
+                },
+                success: function(pk) {
+                    submitTasksModifyHandle(pk);
+                    utils.modifyTodoCount(classType, classid, 1);
+                    handle.clearStatusHl();
+                },
+                error: function(xhr) {
+                    alert(xhr.responseText + "添加失败，请重试");
+                }
+            })
+        }
+        else {
+            var taskid = current.$task.attr("pk");
+            $.ajax({
+                url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
+                type: "PUT",
+                data: {
+                    caption: caption,
+                    duedate: duedate,
+                    content: content
+                },
+                headers: {
+                    "X-CSRFTOKEN": utils.getCookie("csrftoken")
+                },
+                success: function() {
+                    var editItem = $taskList.find("li[pk="+taskid+"]");
+                    editItem.first("span").text(caption);
+                },
+                error: function(xhr) {
+                    alert(xhr.responseText + "修改失败，请重试");
+                }
+            })
+        }
         showStatus();
     })
 
     // 点击编辑任务按钮
     $edit.click(function() {
+        addFlag = false;
         event.stopPropagation();
         old_content = [$caption.text(), $date.text(), $something.text()];
         editStatus();
@@ -180,12 +206,15 @@ define(function(require, exports) {
         $.ajax({
             url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
             type: "PUT",
+            data: {status: true},
             headers: {
                 "X-CSRFTOKEN": utils.getCookie("csrftoken")
             },
-            success: function() {
+            success: function(result) {
                 current.$task.css("color", "#32cd32");
                 $that.addClass("hide");
+                utils.modifyTodoCount(
+                    result.class_type, result.class_id, -1);
             },
             error: function() {
                 alert("修改状态失败");
@@ -195,6 +224,7 @@ define(function(require, exports) {
 
     // 点击新增任务按钮
     $("#add-task").click(function() {
+        addFlag = true;
         event.stopPropagation();
         handle.clearHandelHl();
         old_content = [$caption.text(), $date.text(), $something.text()];

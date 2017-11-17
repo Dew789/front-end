@@ -85,6 +85,7 @@ define(function(require, exports) {
         if ($target.is(".delete")) {
             var $taskItem = $target.parent(),
                 taskid = $taskItem.attr("pk");
+
             function delTask() {
                 $.ajax({
                     url: "http://127.0.0.1:8000/gtd/task/"+taskid+"/",
@@ -94,18 +95,20 @@ define(function(require, exports) {
                     },
                     success: function(result) {
                         // 如果删除的task是右侧显示task删除右侧内容
-                        if ($taskItem[0] === current.$task[0]) {
+                        if (current.$task && $taskItem[0] === current.$task[0]) {
                             task.clearContent();
                             task.showStatus();
+                        }
+                        // 重新计算category部分计数
+                        if ($taskItem.css("color") !== "rgb(50, 205, 50)") {
+                            utils.modifyTodoCount(
+                                result.class_type, result.class_id, -1);
                         }
                         if (($taskItem.next().is(".date") || !$taskItem.next().html())
                             && $taskItem.prev().is(".date")) {
                             $taskItem.prev().remove();
                         }
                         $taskItem.remove();
-                        // 重新计算category部分计数
-                        utils.modifyTodoCount(
-                            result.class_type, result.class_id, -1);
                     },
                     error: function() {
                         alert("删除失败");
@@ -131,14 +134,13 @@ define(function(require, exports) {
                 },            
                 success: function(result) {
                     clearHandelHl();
-                    // 显示编辑按钮
-                    $done.css("display", "inline-block");
-                    $edit.css("display", "inline-block");
-    
                     $that.css("background-color", "#f2f2f2")
                     $caption.text(result.title);
                     $date.text("截止日期:"+result.date);
                     $something.text(result.content);
+                    task.showStatus();
+                    // 重新显示可编辑区域
+                    $(".modify").removeClass("hide");
                     result.status?$done.addClass("hide"):$done.removeClass("hide");
                     current.$task = $target;
                 },

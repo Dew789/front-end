@@ -166,7 +166,30 @@ class TaskItemView(View):
 
     def put(self ,request, taskid):
         item = Task.objects.get(pk=taskid)
-        item.status = True
+        data = QueryDict(request.body)
+        if data.get("status"):
+            item.status = True
+            if item.top_class:
+                class_item = item.top_class
+            else:
+                class_item = item.second_class
+            class_type = class_item.__class__.__name__
+            class_type = class_type[0:-5].lower() + "-" + "class"
+            t = {
+                "class_type": class_type,
+                "class_id": class_item.pk
+            }
 
-        item.save()
+            item.save()
+            return JsonResponse(t)
+        else:
+            caption = data['caption']
+            duedate = data['duedate']
+            duedate = duedate.split(":")[1]
+            content = data['content'].strip()
+
+            item.task_text = content
+            item.due_date = duedate
+            item.caption = caption
+            item.save()
         return HttpResponse(status=200)
