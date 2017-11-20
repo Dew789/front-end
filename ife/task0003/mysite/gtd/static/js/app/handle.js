@@ -97,7 +97,6 @@ define(function(require, exports) {
                         // 如果删除的task是右侧显示task删除右侧内容
                         if (current.$task && $taskItem[0] === current.$task[0]) {
                             task.clearContent();
-                            task.showStatus();
                         }
                         // 重新计算category部分计数
                         if ($taskItem.css("color") !== "rgb(50, 205, 50)") {

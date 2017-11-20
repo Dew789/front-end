@@ -15,7 +15,7 @@ define(function(require, exports) {
         $classList = $("#class-list"),
         $taskList = $("#tasks"),
         addFlag,
-        old_content;
+        old_content;      
 
     // 防止点击编辑状态的content,修改currentclass
     $caption.click(function() {
@@ -41,6 +41,7 @@ define(function(require, exports) {
         $caption.text("");
         $date.text("");
         $something.text("");
+        showStatus();
         $(".modify").addClass("hide");
     }
 
@@ -106,19 +107,16 @@ define(function(require, exports) {
                             head = '<li class="title" pk="' + task[1] +'">'
                         }
                         content = content + head
-                            + task[0]
+                             + '<span>' + task[0] + '</span>'
                             + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
                             + '</li>';
                     }
                 });
                 $taskList.html(content);
-                for (var item of $("#tasks").find("li.title")) {
-                    if ($(item).attr("pk") == pk) {
-                        current.$task = $(item);
-                    }
-                }
+                handle.clearStatusHl();
                 handle.clearHandelHl();
                 $("#all").addClass("select");
+                current.$task = $("#tasks").find("li.title[pk="+pk+"]");
                 current.$task.css("background-color", "#f2f2f2");
             },
             error: function() {
@@ -130,9 +128,9 @@ define(function(require, exports) {
     // 确认修改并提交
     $("#edit-confirm").click(function() {
         event.stopPropagation();
-        var caption = $caption.text(),
-            duedate = $date.text(),
-            content = $something.text(),
+        var caption = utils.removeHtmlTag($caption.text()),
+            duedate = utils.removeHtmlTag($date.text()),
+            content = utils.removeHtmlTag($something.text()),
             classType = current.$class.attr("class"),
             classid = current.$class.attr("pk");
 
@@ -158,7 +156,6 @@ define(function(require, exports) {
                 success: function(pk) {
                     submitTasksModifyHandle(pk);
                     utils.modifyTodoCount(classType, classid, 1);
-                    handle.clearStatusHl();
                 },
                 error: function(xhr) {
                     alert(xhr.responseText + "添加失败，请重试");
@@ -187,6 +184,9 @@ define(function(require, exports) {
                 }
             })
         }
+        $caption.text(caption);
+        $date.text(duedate);
+        $something.text(content);
         showStatus();
     })
 

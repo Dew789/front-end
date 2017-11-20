@@ -146,7 +146,6 @@ define(function(require, exports) {
         handle.clearHandelContent();
         $("#all").addClass("select");
         task.clearContent();
-        task.showStatus();
         current.$class = $classList;
     })
 
@@ -230,7 +229,7 @@ define(function(require, exports) {
                             }
                             handleList = handleList
                                 + head
-                                + item[0]
+                                + '<span>' + item[0] + '</span>'
                                 + '<i class="fa fa-times hide delete" aria-hidden="true"></i>'
                                 + '</li>';
                         }

@@ -41,8 +41,23 @@ define(function(require) {
         recount($total);
     }
 
+    // Jquery html 转义
+    function htmlEncode(value) {  
+      return $('<div/>').text(value).html();  
+    } 
+
+    function htmlDecode(value) {  
+      return $('<div/>').html(value).text();  
+    }
+
+    // 去除字符串中的html标签
+    function removeHtmlTag(value) {
+        return value.replace(/<\/?.+?>/g,"");
+    }
+
     return {
         getCookie: getCookie,
-        modifyTodoCount: modifyTodoCount
+        modifyTodoCount: modifyTodoCount,
+        removeHtmlTag: removeHtmlTag
     };
 });
