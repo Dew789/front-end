@@ -4,16 +4,18 @@ from django.http import HttpResponse, JsonResponse, QueryDict
 from django.views.generic import View
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import requires_csrf_token
 import datetime
 
 from .models import TopClass, SecondClass, Task
 
 
+@requires_csrf_token
 def index(request):
     context = {}
     default_obj = TopClass.objects.get(name="默认分类")
     context['default'] = default_obj
-    context['top_class_list'] = TopClass.objects.all()[1:]
+    context['top_class_list'] = TopClass.objects.exclude(name="默认分类")
 
     all_todo_num = 0
     for task in Task.objects.all():
