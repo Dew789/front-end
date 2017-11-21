@@ -51,7 +51,15 @@ define(function(require, exports) {
         $caption.text(old_content[0]);
         $date.text(old_content[1]);
         $something.text(old_content[2]);
-        showStatus();
+        alert("asd")
+        if ($('.modify').hasClass("hide")) {
+            alert("asdadasd")
+            showStatus();
+            $(".modify").addClass("hide");
+        }
+        else {
+            showStatus();
+        }
     })
 
     function editStatus() {
