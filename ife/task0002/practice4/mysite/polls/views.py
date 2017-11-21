@@ -54,7 +54,7 @@ def index(request):
     latest_question_list = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
     context['latest_question_list'] = latest_question_list
     context['form'] = form
-    return render(request, 'index/ftmp_121_ub/index.html', context)
+    return render(request, 'polls/index.html', context)
 
 def detail(request, question_id):
     if request.user.is_authenticated:

@@ -1,9 +1,10 @@
+#!/usr/bin/env python
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, QueryDict
 from django.views.generic import View
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
-
+import datetime
 
 from .models import TopClass, SecondClass, Task
 
@@ -99,6 +100,18 @@ class SecondClassItemView(View):
             resp = JsonResponse(item.task_finish())
         return resp
 
+def checkFormat(caption, duedate, content):
+    if (not caption) or (not content):
+        return "标题正文不能为空, "
+    if len(caption) > 20:
+        return "标题字数不能超过20, "
+    if len(content) > 200:
+        return "正文字数不能超过200, "
+    try:
+        year, month, day = map(int, duedate.split("-"))
+        datetime.date(year, month, day)
+    except:
+        return "日期格式为xxxx-xx-xx,且为正确时间, "
 
 class TaskView(View):
 
@@ -109,6 +122,10 @@ class TaskView(View):
         content = request.POST['content'].strip()
         classtype = request.POST['classType']
         classid = request.POST['classid']
+
+        result = checkFormat(caption, duedate, content)
+        if result:
+            return HttpResponse(status=500, content=result)
 
         if classtype == "top-class":
             top_class =  TopClass.objects.get(pk=classid)
@@ -187,6 +204,10 @@ class TaskItemView(View):
             duedate = data['duedate']
             duedate = duedate.split(":")[1]
             content = data['content'].strip()
+
+            result = checkFormat(caption, duedate, content)
+            if result:
+                return HttpResponse(status=500, content=result)
 
             item.task_text = content
             item.due_date = duedate

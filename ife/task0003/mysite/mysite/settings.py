@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Django settings for mysite project.
 

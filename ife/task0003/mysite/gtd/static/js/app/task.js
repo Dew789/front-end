@@ -139,6 +139,10 @@ define(function(require, exports) {
             classType = "top-class"
             classid = 1;
         }
+        $caption.text(caption);
+        $date.text(duedate);
+        $something.text(content);
+        showStatus();
         if (addFlag) {
             $.ajax({
                 url: "http://127.0.0.1:8000/gtd/task/",
@@ -159,6 +163,7 @@ define(function(require, exports) {
                 },
                 error: function(xhr) {
                     alert(xhr.responseText + "添加失败，请重试");
+                    editStatus();
                 }
             })
         }
@@ -181,13 +186,10 @@ define(function(require, exports) {
                 },
                 error: function(xhr) {
                     alert(xhr.responseText + "修改失败，请重试");
+                    editStatus();
                 }
             })
         }
-        $caption.text(caption);
-        $date.text(duedate);
-        $something.text(content);
-        showStatus();
     })
 
     // 点击编辑任务按钮
