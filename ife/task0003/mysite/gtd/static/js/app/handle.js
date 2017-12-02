@@ -122,6 +122,9 @@ define(function(require, exports) {
     function getContent(event) {
         event.stopPropagation();
         var $target = $(event.target);
+        if ($target.is("li.title span")) {
+            $target = $target.parent();
+        }
         if ($target.is("li.title")) {
             var taskid = $target.attr("pk");
                 $that = $target;
