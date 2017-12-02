@@ -51,9 +51,7 @@ define(function(require, exports) {
         $caption.text(old_content[0]);
         $date.text(old_content[1]);
         $something.text(old_content[2]);
-        alert("asd")
         if ($('.modify').hasClass("hide")) {
-            alert("asdadasd")
             showStatus();
             $(".modify").addClass("hide");
         }
@@ -166,6 +164,7 @@ define(function(require, exports) {
                     "X-CSRFTOKEN": utils.getCookie("csrftoken")
                 },
                 success: function(pk) {
+                    $done.removeClass("hide");
                     submitTasksModifyHandle(pk);
                     utils.modifyTodoCount(classType, classid, 1);
                 },

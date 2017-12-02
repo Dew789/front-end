@@ -19,6 +19,9 @@ define(function(require) {
     }
 
     // 重新计算并在catalogry处显示未完成时间数
+    // classType: top-class second-class
+    // classid: 对应的classid
+    // num: 正数为增加，父数位减少
     function modifyTodoCount(classType, classid, num) {
         function recount($item) {
             var count = $item.text().slice(1, -1);
